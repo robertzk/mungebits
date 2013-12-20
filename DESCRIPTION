@@ -5,6 +5,7 @@ Description: Mungebits is a collection of data preparation functions
 Version: 0.1
 Authors@R: c(person("Robert", "Krzyzanowski",
     email = "technoguyrob@gmail.com", role = c("aut", "cre")))
-Depends: R (>= 3.0.2)
+Depends:
+    R (>= 3.0.2)
 License: MIT
 LazyData: true
