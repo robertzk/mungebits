@@ -31,6 +31,7 @@ mungebit <- function(mungebit_function,
                      modifies.row.dimension = FALSE) {
   function(...) {
     arguments <- as.list(...)
-    do.call(mungebit_function, arguments)
+    #function(df) {
+    #  do.call(mungebit_function, arguments)
   }
 }
