@@ -1,6 +1,6 @@
 context('column transformations')
 
-test_that('correctly transforms one column by multipling by two', {
+test_that('correctly transforms one column by multiplying by two', {
   iris2 <- iris
   doubler <- column_transformation(function(x) 2 * x)
   doubler(iris2, 'Sepal.Length')
@@ -8,7 +8,7 @@ test_that('correctly transforms one column by multipling by two', {
                "column_transformation must double first column of iris2")
 })
 
-test_that('correctly transforms multiple columns by multipling by two', {
+test_that('correctly transforms multiple columns by multiplying by two', {
   iris2 <- iris
   doubler <- column_transformation(function(x) 2 * x)
   doubler(iris2, c('Sepal.Length', 'Sepal.Width'))
@@ -24,7 +24,6 @@ test_that('correctly transforms one column by converting to character', {
   expect_equal(iris2[[1]], as.character(iris[[1]]),
                info = paste("column_transformation must convert to character",
                             "first column of iris2"))
-
 })
 
 test_that('correctly transforms multiple columns by converting to character', {
@@ -98,3 +97,4 @@ test_that('it doubles a column no more than twice as slow as a raw operation', {
      testthat:::colourise('raw_double', 'blue'),
      " (see code for this unit test)"))
 })
+
