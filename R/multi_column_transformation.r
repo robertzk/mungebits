@@ -43,7 +43,7 @@
 #' # scale Sepal.Length and Sepal.Width by two
 #' scaler(iris, c('Sepal.Length', 'Sepal.Width'), , 2)
 #' scaler(iris[c('Petal.Length', 'Petal.Width')]), , , 2)
-# # Note the missing second and third arguments
+#' # Note the missing second and third arguments.
 multi_column_transformation <- function(transformation) {
   function(dataframe, input_cols = colnames(dataframe),
            output_cols = input_cols, ...) {
