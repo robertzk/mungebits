@@ -90,7 +90,7 @@ multi_column_transformation <- function(transformation) {
       #dataframe[output_cols[
       #  vapply(intersect(output_cols, names(dataframe)),
       #         function(x) is.null(dataframe[[x]]),
-      #         logical(2))
+      #         logical(1))
       #]] <- NULL
 
       class(dataframe) <- 'data.frame'
