@@ -72,12 +72,14 @@ test_that('correctly transforms using logical column indices', {
 test_that('correctly imputes means', {
   iris2 <- iris
   mean_imputer <- column_transformation(function(x) {
-    x[is.na(x)] <- mean(x, na.rm = TRUE)
+    x[is.na(x)] <- mean(x, na.rm = TRUE); x
   })
   iris2[1, ] <- NA
   mean_imputer(iris2, 1)
+  non_nas <- tail(iris[[1]], -1)
   
-  expect_equal(iris2[1, 1], mean(tail(iris[[1]], -1)),
+  expect_equal(unlist(unname(iris2[, 1])),
+               c(mean(non_nas), non_nas),
                info = paste("column_transformation must impute NAs with mean"))
 })
 

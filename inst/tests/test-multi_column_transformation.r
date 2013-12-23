@@ -87,7 +87,7 @@ test_that('correctly transforms using logical column indices', {
   doubler(iris2, 'Sepal.Width' == colnames(iris2))
   
   expect_equal(iris2[[2]], 2 * iris[[2]],
-     info = paste("column_transformation must be able to reference",
+     info = paste("multi_column_transformation must be able to reference",
                   "columns using numeric indices",
                   "(e.g., doubler(iris2, c(F,T,F,F,F))"))
 })
@@ -101,7 +101,7 @@ test_that('accepts transformation calls with missing arguments', {
   })
   scaler(iris2, , , 2)
   expect_equal(iris2, 2 * iris[, 1:4],
-               info = "column_transformation must double first column of iris2")
+    info = "multi_column_transformation must double first column of iris2")
 })
 
 test_that('transforms a partial data frame', {
@@ -109,13 +109,30 @@ test_that('transforms a partial data frame', {
   swapper <- multi_column_transformation(function(x, y) list(y, x))
   swapper(iris2[c(1, 2)])
   expect_equal(unname(iris2[, 1:2]), unname(iris[, 2:1]),
-    info = "column_transformation must swap values of first two columns")
+    info = "multi_column_transformation must swap values of first two columns")
+})
+
+test_that('correctly renames a column', {
+  iris2 <- iris
+  renamer <- multi_column_transformation(function(x) list(NULL, x))
+  renamer(iris2, 'Sepal.Length', c('Sepal.Length', 'seplen'))
+  
+  expect_true('seplen' %in% colnames(iris2),
+              !'Sepal.Length' %in% colnames(iris2),
+             info = paste("multi_column_transformation must be able to reference",
+                          "columns using numeric indices",
+                          "(e.g., doubler(iris2, c(F,T,F,F,F))"))
+  expect_equal(length(colnames(iris2)), 5,
+    info = "multi_column_transformation must remove old column 'Sepal.Length'")
 })
 
 # This is technically a benchmark but I have no place to put it yet
-test_that('it doubles a column no more than 3.5x as slow as a raw operation', {
+test_that('it doubles a column no more than 5x as slow as a raw operation', {
   require(microbenchmark)
   iris2 <- iris
+  # Beef up our data.frame
+  iris2 <- do.call(rbind.data.frame, replicate(5, iris2))
+  iris2 <- do.call(cbind.data.frame, replicate(5, iris2))
   raw_double <- function(dataframe, cols) {
     class(dataframe) <- 'list'
     for(col in cols) dataframe[[col]] <- 2 * dataframe[[col]]
@@ -130,6 +147,7 @@ test_that('it doubles a column no more than 3.5x as slow as a raw operation', {
                                    times = 5L))
   multi_column_transformation_runtime <- speeds$median[[1]]
   apply_raw_function_runtime <- speeds$median[[2]]
+  #print(speeds)
   # The 3.5 is sort of a magic value here but it is almost always OK.
   expect_true(multi_column_transformation_runtime <
                 3.5 * apply_raw_function_runtime,

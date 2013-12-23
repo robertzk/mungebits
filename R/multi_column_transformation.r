@@ -77,16 +77,16 @@ multi_column_transformation <- function(transformation) {
           do.call(`*tmp.fn.left.by.mungebits.library*`,
                   append(unname(dataframe[input_cols]), list(...)))
 
+      #for(col in colnames(iris2)[vapply(iris2[1,], is.null, logical(1))]) iris2[[col]] <- NULL 
       # Keeping some alternative code for now:
       # Remove any columns that were set to NULL explicitly
-      #dataframe[seq_along(dataframe)[
-      #  vapply(seq_along(dataframe),
-      #         function(x) is.null(dataframe[[x]]),
-      #         logical(1))
-      #]] <- NULL
-      #for(i in seq_along(dataframe)) {
-      #  if (is.null(dataframe[[i]])) dataframe[[i]] <- NULL
-      #}
+      #which(vapply(output_cols, function(x) is.null(dataframe[[x]]), logical(1))) 
+      # dataframe[which(vapply(output_cols, function(x) is.null(dataframe[[x]]), logical(1))) %||% integer(0)] <- NULL
+      dataframe[seq_along(dataframe)[
+        vapply(seq_along(dataframe),
+               function(x) is.null(dataframe[[x]]),
+               logical(1))
+      ]] <- NULL
       #dataframe[output_cols[
       #  vapply(intersect(output_cols, names(dataframe)),
       #         function(x) is.null(dataframe[[x]]),
@@ -94,7 +94,6 @@ multi_column_transformation <- function(transformation) {
       #]] <- NULL
 
       class(dataframe) <- 'data.frame'
-      dataframe
     }), envir = parent.frame()))
   }
 }

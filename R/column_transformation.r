@@ -10,6 +10,7 @@
 #'    column.
 #' @return a function which takes a data.frame and a vector of columns and
 #'    applies the transformation.
+#' @seealso \link{\code{multi_column_transformation}}
 #' @export
 #' @examples
 #' doubler <- column_transformation(function(x) 2*x)
