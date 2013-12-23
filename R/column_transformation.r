@@ -16,22 +16,18 @@
 #' # doubles the Sepal.Length column in the iris dataset
 #' doubler(iris, c('Sepal.Length')) 
 column_transformation <- function(transformation) {
-  function(df, cols, ...) {
+  function(df, cols = colnames(df), ...) {
     # The fastest way to do this. The alternatives are provided in the comment below
     assign("*tmp.fn.left.by.mungebits.library*",
            transformation, envir = parent.frame())
-    cols <- 
-      if (is.character(cols)) force(cols)
-      else colnames(df)[cols]
+    cols <- standard_column_format(cols, df)
 
     invisible(eval(substitute({
       # Trick to make assignment incredibly fast. Could screw up the
       # data.frame if the function is interrupted, however.
       class(df) <- 'list'
       on.exit(class(df) <- 'data.frame')
-      for(colname in cols) {
-        df[[colname]] <- `*tmp.fn.left.by.mungebits.library*`(df[[colname]], ...)
-      }
+      df[cols] <- lapply(df[cols], `*tmp.fn.left.by.mungebits.library*`, ...)
       class(df) <- 'data.frame'
       df
     }), envir = parent.frame()))
