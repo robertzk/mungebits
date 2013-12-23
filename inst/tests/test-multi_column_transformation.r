@@ -37,7 +37,7 @@ test_that('correctly swaps two columns', {
 
 test_that('correctly removes columns', {
   iris2 <- iris
-  remover <- multi_column_transformation(function(...) NULL) #Reduce(append, lapply(1:10, function(x) list(NULL)))) # NULL)
+  remover <- multi_column_transformation(function(...) NULL)
   remover(iris2, 'Sepal.Length')
   expect_true(!'Sepal.Length' %in% colnames(iris2),
     info = paste("multi_column_transformation must remove first column"))
@@ -92,15 +92,35 @@ test_that('correctly transforms using logical column indices', {
                   "(e.g., doubler(iris2, c(F,T,F,F,F))"))
 })
 
+test_that('accepts transformation calls with missing arguments', {
+  iris2 <- iris[, 1:4]
+  scaler <- multi_column_transformation(function(...) {
+    args <- list(...); const <- args[[length(args)]]; args <- head(args, -1)
+    if (length(args) == 1) args[[1]] * const
+    else lapply(args, function(col) col * const)
+  })
+  scaler(iris2, , , 2)
+  expect_equal(iris2, 2 * iris[, 1:4],
+               info = "column_transformation must double first column of iris2")
+})
+
+test_that('transforms a partial data frame', {
+  iris2 <- iris
+  swapper <- multi_column_transformation(function(x, y) list(y, x))
+  swapper(iris2[c(1, 2)])
+  expect_equal(unname(iris2[, 1:2]), unname(iris[, 2:1]),
+    info = "column_transformation must swap values of first two columns")
+})
+
 # This is technically a benchmark but I have no place to put it yet
-test_that('it doubles a column no more than twice as slow as a raw operation', {
+test_that('it doubles a column no more than 3.5x as slow as a raw operation', {
   require(microbenchmark)
   iris2 <- iris
-  raw_double <- function(df, cols) {
-    class(df) <- 'list'
-    for(col in cols) df[[col]] <- 2 * df[[col]]
-    class(df) <- 'data.frame'
-    df
+  raw_double <- function(dataframe, cols) {
+    class(dataframe) <- 'list'
+    for(col in cols) dataframe[[col]] <- 2 * dataframe[[col]]
+    class(dataframe) <- 'data.frame'
+    dataframe
   }
   numeric_cols <- names(which(vapply(iris2, is.numeric, logical(1))))
   doubler <- multi_column_transformation(
@@ -108,13 +128,15 @@ test_that('it doubles a column no more than twice as slow as a raw operation', {
   speeds <- summary(microbenchmark(doubler(iris2, numeric_cols),
                                    raw_double(iris2, numeric_cols),
                                    times = 5L))
-  column_transformation_runtime <- speeds$median[[1]]
+  multi_column_transformation_runtime <- speeds$median[[1]]
   apply_raw_function_runtime <- speeds$median[[2]]
-  expect_true(column_transformation_runtime < 3 * apply_raw_function_runtime,
+  # The 3.5 is sort of a magic value here but it is almost always OK.
+  expect_true(multi_column_transformation_runtime <
+                3.5 * apply_raw_function_runtime,
     paste0("Execution of ",
      testthat:::colourise('multi_column_transformation', "blue"),
      " took too long: \nFormer took ",
-     testthat:::colourise(paste0(column_transformation_runtime, "ms"), "red"),
+     testthat:::colourise(paste0(multi_column_transformation_runtime, "ms"), "red"),
      " but latter took ",
      testthat:::colourise(paste0(apply_raw_function_runtime, "ms"), "red"), ".\n",
      "You need to make sure the code for multi_column_transformation\n",

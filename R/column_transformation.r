@@ -16,29 +16,33 @@
 #' # doubles the Sepal.Length column in the iris dataset
 #' doubler(iris, c('Sepal.Length')) 
 column_transformation <- function(transformation) {
-  function(df, cols = colnames(df), ...) {
+  function(dataframe, cols = colnames(dataframe), ...) {
     # The fastest way to do this. The alternatives are provided in the comment below
     assign("*tmp.fn.left.by.mungebits.library*",
            transformation, envir = parent.frame())
-    cols <- standard_column_format(cols, df)
+    cols <- force(cols)
+    if (is.logical(cols)) cols <- which(cols)
 
     invisible(eval(substitute({
       # Trick to make assignment incredibly fast. Could screw up the
       # data.frame if the function is interrupted, however.
-      class(df) <- 'list'
-      on.exit(class(df) <- 'data.frame')
-      df[cols] <- lapply(df[cols], `*tmp.fn.left.by.mungebits.library*`, ...)
-      class(df) <- 'data.frame'
-      df
+      class(dataframe) <- 'list'
+      on.exit(class(dataframe) <- 'data.frame')
+      dataframe[cols] <- lapply(dataframe[cols],
+                                `*tmp.fn.left.by.mungebits.library*`, ...)
+      # Slightly slower is:
+      # for(i in cols) dataframe[[i]] <-
+      #   `*tmp.fn.left.by.mungebits.library*`(dataframe[[i]], ...)
+      class(dataframe) <- 'data.frame'
     }), envir = parent.frame()))
   }
 }
 
 # Possible column transformations:
-# 1: function(df, col) { df[col] <- 2*df[col]; df }
-# 2: function(df, col) { eval(substitute(df[col] <- 2*df[col]), envir = parent.frame()) }
-# 3: function(df, col) { class(df) <- 'list'; for(colname in col) df[[colname]] <- 2*df[[colname]]; class(df) <- 'data.frame'; df }
-# 4: function(df, col) { eval(substitute({ class(df) <- 'list'; for(colname in col) df[[col]] <- 2*df[[col]]; class(df) <- 'data.frame'; df }), envir = parent.frame()) }
+# 1: function(dataframe, col) { dataframe[col] <- 2*dataframe[col]; dataframe }
+# 2: function(dataframe, col) { eval(substitute(dataframe[col] <- 2*dataframe[col]), envir = parent.frame()) }
+# 3: function(dataframe, col) { class(dataframe) <- 'list'; for(colname in col) dataframe[[colname]] <- 2*dataframe[[colname]]; class(dataframe) <- 'data.frame'; dataframe }
+# 4: function(dataframe, col) { eval(substitute({ class(dataframe) <- 'list'; for(colname in col) dataframe[[col]] <- 2*dataframe[[col]]; class(dataframe) <- 'data.frame'; dataframe }), envir = parent.frame()) }
 # 5: The method above for dynamic lambdas
 # An extra rm function after the assign increases runtime by 75% with frequent application.
 # The fifth option is the fastest.

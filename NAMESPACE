@@ -1,2 +1,4 @@
 export(column_transformation)
+export(multi_column_transformation)
 export(mungebit)
+export(standard_column_format)
