@@ -147,7 +147,7 @@ test_that('it doubles a column no more than 5x as slow as a raw operation', {
                                    times = 5L))
   multi_column_transformation_runtime <- speeds$median[[1]]
   apply_raw_function_runtime <- speeds$median[[2]]
-  #print(speeds)
+
   # The 3.5 is sort of a magic value here but it is almost always OK.
   expect_true(multi_column_transformation_runtime <
                 3.5 * apply_raw_function_runtime,
