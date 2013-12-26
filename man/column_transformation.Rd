@@ -25,4 +25,7 @@ doubler <- column_transformation(function(x) 2*x)
 # doubles the Sepal.Length column in the iris dataset
 doubler(iris, c('Sepal.Length'))
 }
+\seealso{
+\link{\code{multi_column_transformation}}
+}
 

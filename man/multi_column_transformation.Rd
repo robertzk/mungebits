@@ -5,12 +5,16 @@
 multi_column_transformation(transformation)
 }
 \arguments{
-  \item{transformation}{a function. The only argument
-  should be the original column.}
+  \item{transformation}{a function. The arguments will be
+  the ordered columns selected from the dataframe when the
+  transformation is performed (see examples). One has to be
+  careful to return an atomic vector if the result is
+  1-dimensional, and a list otherwise.}
 }
 \value{
-a function which takes a data.frame and a vector of columns
-and applies the transformation.
+a function which takes a data.frame, input columns, and
+output columns, the latter two of which specify the domain
+and range of the transformation (see examples).
 }
 \description{
 A mungebit which does not affect any existing columns, but
@@ -18,8 +22,38 @@ can transform other columns into new columns, or affect
 multiple columns simultaneously as functions of each other.
 }
 \examples{
-doubler <- multi_column_transformation(function(x) 2*x)
-# doubles the Sepal.Length column in the iris dataset
-doubler(iris, c('Sepal.Length'))
+perimeter <- multi_column_transformation(function(x, y) 2*x + 2*y)
+perimeter(iris, c('Sepal.Length', 'Sepal.Width'), 'Sepal.Perimeter')
+
+multiplier <- multi_column_transformation(function(x, y) x*y)
+multiplier(iris, c('Sepal.Length', 'Sepal.Width'), 'Sepal.Area')
+
+property_generator <- multi_column_transformation(
+   function(x, y) list(2*x + 2*y, x*y))
+property_generator(iris, c('Sepal.Length' 'Sepal.Width'),
+   c('Sepal.Perimeter', 'Sepal.Area'))
+
+swapper <- multi_column_transformation(function(x, y) list(y, x))
+swapper(iris, c('Sepal.Length', 'Sepal.Width'),
+  c('Sepal.Width', 'Sepal.Length'))
+
+column_remover <- multi_column_transformation(function(...) NULL)
+column_remover(iris, c('Sepal.Length', 'Sepal.Width'))
+
+scaling_fun <- function(...) {
+  args <- list(...)
+  const <- args[[length(args)]]
+  args <- head(args, -1)
+  if (length(args) == 1) args[[1]] * const
+  else lapply(args, function(col) col * const)
+}
+scaler <- multi_column_transformation(scaling_fun)
+# scale Sepal.Length and Sepal.Width by two
+scaler(iris, c('Sepal.Length', 'Sepal.Width'), , 2)
+scaler(iris[c('Petal.Length', 'Petal.Width')]), , , 2)
+# Note the missing second and third arguments.
+}
+\seealso{
+\link{\code{column_transformation}}
 }
 

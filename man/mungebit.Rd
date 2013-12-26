@@ -2,7 +2,8 @@
 \alias{mungebit}
 \title{Constructor for mungebit class.}
 \usage{
-mungebit(mungebit_function, modifies.column = TRUE, modifies.row = FALSE,
+mungebit(train_function, predict_function = train_function,
+  modifies.column = TRUE, modifies.row = FALSE,
   modifies.column.dimension = FALSE, modifies.row.dimension = FALSE)
 }
 \arguments{
