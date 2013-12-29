@@ -1,30 +1,21 @@
+\docType{class}
 \name{mungebit}
 \alias{mungebit}
 \title{Constructor for mungebit class.}
-\usage{
-mungebit(train_function, predict_function = train_function,
-  modifies.column = TRUE, modifies.row = FALSE,
-  modifies.column.dimension = FALSE, modifies.row.dimension = FALSE)
-}
 \arguments{
-  \item{mungebit_function}{a function. The first argument
-  should always be the data.frame. The other arguments are
-  optional parameters that can be curried (see examples).}
+  \item{train_fn}{a function. This specifies the behavior
+  to perform on the dataset when preparing for model
+  training.}
 
-  \item{modifies.column}{a logical. Whether or not the
-  mungebit tends to modify entire columns.}
+  \item{predict_fn}{a function. This specifies the behavior
+  to perform on the dataset when preparing for model
+  prediction.}
 
-  \item{modifies.row}{a logical. Whether or not the
-  mungebit tends to modify entire rows.}
+  \item{inputs}{a list. Used for maintaining meta-data
+  between training and prediction runs.}
 
-  \item{modifies.column.dimension}{a logical. Whether or
-  not the mungebit tends to modify column dimension.}
-
-  \item{modifies.row.dimension}{a logical. Whether or not
-  the mungebit tends to modify row dimension.}
-}
-\value{
-mungebit
+  \item{trained}{a logical. Used for determining whether or
+  not the mungebit has been run on a dataset already.}
 }
 \description{
 Mungebits are atomic data transformations of a data.frame
@@ -34,10 +25,23 @@ defined, but examples include dropping variables, mapping
 values, discretization, etc.
 }
 \examples{
-scalebit <- mungebit(function(df, cols, factor = 1) {
-   df[cols] <- vapply(cols, function(x) factor * x, numeric(nrow(df)))
-   df
- })
- scalebit(iris, c('Sepal.Length', 'Sepal.Width'), 2)
+mp <- mungeplane(iris)
+mb <- moongebit(column_transformation(function(col, scale = NULL) {
+  if ('scale' \%in\% names(inputs))
+    cat("Column scaled by ", inputs$scale, "\\n")
+  else inputs$scale <<- scale
+  col * inputs$scale
+}))
+mb$run(mp, 'Sepal.Length', 2)
+# mp$data now contains a copy of iris w/ the Sepal.Length column doubled
+head(mp$data[[1]] / iris[[1]])
+# > [1] 2 2 2 2 2 2
+mb$run(mp, 'Sepal.Length')
+# > Column scaled by 2
+head(mp$data[[1]] / iris[[1]])
+# > [1] 4 4 4 4 4 4
+}
+\seealso{
+\code{\link{mungepiece}}
 }
 

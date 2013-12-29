@@ -30,7 +30,7 @@ multiplier(iris, c('Sepal.Length', 'Sepal.Width'), 'Sepal.Area')
 
 property_generator <- multi_column_transformation(
    function(x, y) list(2*x + 2*y, x*y))
-property_generator(iris, c('Sepal.Length' 'Sepal.Width'),
+property_generator(iris, c('Sepal.Length', 'Sepal.Width'),
    c('Sepal.Perimeter', 'Sepal.Area'))
 
 swapper <- multi_column_transformation(function(x, y) list(y, x))
@@ -50,10 +50,10 @@ scaling_fun <- function(...) {
 scaler <- multi_column_transformation(scaling_fun)
 # scale Sepal.Length and Sepal.Width by two
 scaler(iris, c('Sepal.Length', 'Sepal.Width'), , 2)
-scaler(iris[c('Petal.Length', 'Petal.Width')]), , , 2)
+scaler(iris[c('Petal.Length', 'Petal.Width')], , , 2)
 # Note the missing second and third arguments.
 }
 \seealso{
-\link{\code{column_transformation}}
+\code{\link{column_transformation}}
 }
 

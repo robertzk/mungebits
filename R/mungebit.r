@@ -6,14 +6,16 @@
 #' include dropping variables, mapping values, discretization, etc.
 #'
 #' @docType class
+#' @name mungebit
 #' @param train_fn a function. This specifies the behavior to perform
 #'    on the dataset when preparing for model training.
 #' @param predict_fn a function. This specifies the behavior to perform
 #'    on the dataset when preparing for model prediction.
 #' @param inputs a list. Used for maintaining meta-data between
 #'    training and prediction runs.
-#' @return mungebit
-#' @export
+#' @param trained a logical. Used for determining whether or not the
+#'    mungebit has been run on a dataset already.
+#' @seealso \code{\link{mungepiece}}
 #' @examples
 #' mp <- mungeplane(iris)
 #' mb <- mungebit(column_transformation(function(col, scale = NULL) {
@@ -37,7 +39,7 @@ mungebit <- setRefClass('mungebit',
                 inputs = 'list',
                 trained = 'logical'),
   methods = list(
-    initialize = function(train_fn = function() {}, predict_fn = train_fn) {
+    initialize = function(train_fn = function(x) x, predict_fn = train_fn) {
       train_function <<- train_fn
       predict_function <<- predict_fn
       inputs <<- list()
@@ -57,16 +59,6 @@ mungebit <- setRefClass('mungebit',
     train = function(mungeplane, ...) {
       on.exit(trained <<- TRUE)
       train_function(mungeplane$data, ...)
-    }
-  )
-)
-
-setClassUnion('listOrDataFrame', c('list', 'data.frame'))
-mungeplane <- setRefClass('mungeplane',
-  fields = list(data = 'listOrDataFrame'),
-  methods = list(
-    initialize = function(dataframe) {
-      data <<- dataframe
     }
   )
 )

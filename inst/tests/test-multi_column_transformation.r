@@ -150,7 +150,7 @@ test_that('it doubles a column no more than 5x as slow as a raw operation', {
 
   # The 3.5 is sort of a magic value here but it is almost always OK.
   expect_true(multi_column_transformation_runtime <
-                3.5 * apply_raw_function_runtime,
+              3.5 * apply_raw_function_runtime,
     paste0("Execution of ",
      testthat:::colourise('multi_column_transformation', "blue"),
      " took too long: \nFormer took ",

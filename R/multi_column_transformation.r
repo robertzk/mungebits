@@ -11,7 +11,7 @@
 #' @return a function which takes a data.frame, input columns, and output
 #'    columns, the latter two of which specify the domain and range of the
 #'    transformation (see examples).
-#' @seealso \link{\code{column_transformation}}
+#' @seealso \code{\link{column_transformation}}
 #' @export
 #' @examples
 #' perimeter <- multi_column_transformation(function(x, y) 2*x + 2*y)
@@ -22,7 +22,7 @@
 #'
 #' property_generator <- multi_column_transformation(
 #'    function(x, y) list(2*x + 2*y, x*y))
-#' property_generator(iris, c('Sepal.Length' 'Sepal.Width'),
+#' property_generator(iris, c('Sepal.Length', 'Sepal.Width'),
 #'    c('Sepal.Perimeter', 'Sepal.Area'))
 #'
 #' swapper <- multi_column_transformation(function(x, y) list(y, x))
@@ -42,7 +42,7 @@
 #' scaler <- multi_column_transformation(scaling_fun)
 #' # scale Sepal.Length and Sepal.Width by two
 #' scaler(iris, c('Sepal.Length', 'Sepal.Width'), , 2)
-#' scaler(iris[c('Petal.Length', 'Petal.Width')]), , , 2)
+#' scaler(iris[c('Petal.Length', 'Petal.Width')], , , 2)
 #' # Note the missing second and third arguments.
 multi_column_transformation <- function(transformation) {
   invisible(function(dataframe, input_cols = colnames(dataframe),
@@ -94,6 +94,7 @@ multi_column_transformation <- function(transformation) {
       #]] <- NULL
 
       class(dataframe) <- 'data.frame'
+      NULL
     }), envir = parent.frame()))
   })
 }

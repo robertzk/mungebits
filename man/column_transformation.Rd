@@ -26,6 +26,6 @@ doubler <- column_transformation(function(x) 2*x)
 doubler(iris, c('Sepal.Length'))
 }
 \seealso{
-\link{\code{multi_column_transformation}}
+\code{\link{multi_column_transformation}}
 }
 

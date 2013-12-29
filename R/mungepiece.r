@@ -18,21 +18,25 @@
 #' @param predict_args a list. These will be passed when a mungebit is run
 #'    subsequent times using \code{mungebit$run} or \code{mungebit$predict}.
 #' @examples
-#' mb <- mungebit(column_transformation(function(x) x * 2))
-#' mp <- mungepiece(mb, list('Sepal.Length'))
-#' mpl <- mungeplane(iris)
-#' do.call(attr(mp, 'mungebit'), append(list(mpl), attr(mpl, 'train_args')))
-#' 
-
+#' doubler <- mungebit(column_transformation(function(x) x * 2))
+#' cols <- c('Sepal.Length', 'Petal.Length')
+#' mp <- mungepiece(doubler, list(cols))
+#' iris2 <- mungeplane(iris)
+#' mp$run(iris2)
+#' stopifnot(iris2$data[cols] == 2 * iris[cols])
 setClassUnion('listOrNull', c('list', 'NULL'))
 mungepiece <- setRefClass('mungepiece',
   fields = list(bit = 'mungebit',
                 train_args = 'list',
                 predict_args = 'listOrNull'),
   methods = list(
-    initialize = function(.bit, .train_args, .predict_args = NULL) {
-      stopifnot(is.mungebit(.bit), is.list(.train_args),
-                is.null(.predict_args) || is.list(.predict_args))
+    initialize = function(.bit, .train_args = list(), .predict_args = .train_args) {
+      if (!is.list(.train_args)) .train_args <- list(.train_args)
+      if (!is.list(.predict_args) && !is.null(.predict_args))
+        .predict_args <- list(.predict_args)
+
+      stopifnot(is.mungebit(.bit))
+
       bit <<- .bit
       train_args <<- .train_args
       predict_args <<- .predict_args
@@ -41,14 +45,16 @@ mungepiece <- setRefClass('mungepiece',
     run = function(.mungeplane) {
       method <- if (bit$trained) bit$predict else bit$train
       rest_args <-
-        if (bit$trained) train_args
-        else predict_args %||% train_args
+        if (bit$trained) predict_args %||% train_args
+        else train_args
       do.call(method, append(list(.mungeplane), rest_args))
     }
   )
 )
+
+is.mungepiece <- function(x) inherits(x, 'mungepiece')
     
-# S3 definition... uglier I think
+# S3 definition... uglier I think, since you need to knwo the calling convention
 #mungepiece <- function(bit, train_args, predict_args = train_args) {
 #  mp <- list()
 #  class(mp) <- 'mungepiece'

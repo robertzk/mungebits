@@ -13,3 +13,4 @@ test_that('it correctly parses logical input', {
 test_that('it correctly parses character input', {
   expect_equal(standard_column_format('Sepal.Length', iris), 'Sepal.Length')
 })
+
