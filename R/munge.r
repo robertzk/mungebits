@@ -7,7 +7,11 @@
 #' @param dataframe a data set to operate on.
 #' @param ... usually a list specifying the necessary operations (see
 #'    examples).
-#' @return data.frame
+#' @return data.frame that has had the specified operations applied to it,
+#'    along with an additional property \code{mungepieces} that records
+#'    the history of applied functions. These can be used to reproduce
+#'    the transformations on e.g., a dataset that needs to have a
+#'    prediction run.
 #' @export
 #' @examples
 #' iris2 <- munge(iris,

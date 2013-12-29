@@ -1,6 +1,6 @@
 \name{parse_mungepiece}
 \alias{parse_mungepiece}
-\title{Translate a list of arguments to a mungebit into a mungepiece}
+\title{Translate a list of arguments passed to a mungebit into a mungepiece}
 \usage{
 parse_mungepiece(args)
 }

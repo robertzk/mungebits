@@ -11,13 +11,17 @@ munge(dataframe, ...)
   operations (see examples).}
 }
 \value{
-data.frame
+data.frame that has had the specified operations applied to
+it, along with an additional property \code{mungepieces}
+that records the history of applied functions. These can be
+used to reproduce the transformations on e.g., a dataset
+that needs to have a prediction run.
 }
 \description{
-One can use \code{munge} to take a data.frame, apply a
-given set of transformations, and persistently store the
-operations on the data.frame, ready to run on a future
-dataframe.
+One can use \code{munge} to take a \code{data.frame}, apply
+a given set of transformations, and persistently store the
+operations on the \code{data.frame}, ready to run on a
+future \code{data.frame}.
 }
 \examples{
 iris2 <- munge(iris,
