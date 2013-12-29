@@ -58,6 +58,11 @@ munge <- function(dataframe, ...) {
   # order matters, do not parallelize!
   lapply(mungepieces, function(piece) piece$run(plane))
 
+  # Counteract polluting optimization speed-ups from column_transformation
+  # and multi_column_transformation
+  if (exists('*tmp.fn.left.by.mungebits.library'))
+    rm('*tmp.fn.left.by.mungebits.library')
+
   # For now, store the mungepieces on the dataframe
   if (length(mungepieces) > 0)
     attr(plane$data, 'mungepieces') <- append(old_mungepieces, mungepieces)
