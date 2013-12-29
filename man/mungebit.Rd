@@ -25,8 +25,9 @@ defined, but examples include dropping variables, mapping
 values, discretization, etc.
 }
 \examples{
+\dontrun{
 mp <- mungeplane(iris)
-mb <- moongebit(column_transformation(function(col, scale = NULL) {
+mb <- mungebit(column_transformation(function(col, scale = NULL) {
   if ('scale' \%in\% names(inputs))
     cat("Column scaled by ", inputs$scale, "\\n")
   else inputs$scale <<- scale
@@ -40,6 +41,7 @@ mb$run(mp, 'Sepal.Length')
 # > Column scaled by 2
 head(mp$data[[1]] / iris[[1]])
 # > [1] 4 4 4 4 4 4
+}
 }
 \seealso{
 \code{\link{mungepiece}}

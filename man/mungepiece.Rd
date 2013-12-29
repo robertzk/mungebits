@@ -26,11 +26,13 @@ operations to perform on a to-be-predicted dataset, without
 yet knowing what the data itself is.
 }
 \examples{
+\dontrun{
 doubler <- mungebit(column_transformation(function(x) x * 2))
 cols <- c('Sepal.Length', 'Petal.Length')
 mp <- mungepiece(doubler, list(cols))
 iris2 <- mungeplane(iris)
 mp$run(iris2)
 stopifnot(iris2$data[cols] == 2 * iris[cols])
+}
 }
 

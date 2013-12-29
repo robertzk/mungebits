@@ -18,12 +18,14 @@
 #' @param predict_args a list. These will be passed when a mungebit is run
 #'    subsequent times using \code{mungebit$run} or \code{mungebit$predict}.
 #' @examples
+#' \dontrun{
 #' doubler <- mungebit(column_transformation(function(x) x * 2))
 #' cols <- c('Sepal.Length', 'Petal.Length')
 #' mp <- mungepiece(doubler, list(cols))
 #' iris2 <- mungeplane(iris)
 #' mp$run(iris2)
 #' stopifnot(iris2$data[cols] == 2 * iris[cols])
+#' }
 setClassUnion('listOrNull', c('list', 'NULL'))
 mungepiece <- setRefClass('mungepiece',
   fields = list(bit = 'mungebit',

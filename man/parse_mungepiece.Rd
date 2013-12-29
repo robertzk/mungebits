@@ -22,7 +22,7 @@ parse_mungepiece(args)
   stored in a \code{mungepiece}.}
 }
 \value{
-mungepiece the parsed mungepiece
+the parsed mungepiece
 }
 \description{
 For example, one can pass a training function, a prediction
@@ -31,12 +31,15 @@ mungepiece will hold these arguments, ready to call the
 attached mungebit on a given dataframe.
 }
 \examples{
+\dontrun{
 doubler <- column_transformation(function(x) x * 2)
 mp <- parse_mungepiece(list(doubler, 'Sepal.Length'))
 iris2 <- mungeplane(iris)
 mp$run(iris2)
 stopifnot(all.equal(iris2$data[[1]], 2 * iris[[1]]))
 
-TODO: Way more examples, unit tests
+# TODO: Way more examples, unit tests
+
+}
 }
 

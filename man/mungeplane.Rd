@@ -22,8 +22,10 @@ copy-on-write triggers that would copy the entire
 dataframe.
 }
 \examples{
+\dontrun{
 mp <- mungeplane(iris)
 (function(plane) plane$data[[1]] <- 2 * plane$data[[1]])(mp)
 stopifnot(all.equal(mp$data[[1]], 2 * iris[[1]]))
+}
 }
 

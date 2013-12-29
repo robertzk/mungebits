@@ -10,9 +10,11 @@
 #'    the \code{data.frame} class to use built-in C replacement functions.
 #' @return mungeplane an environment with a "data" object of class "mungeplane"
 #' @examples
+#' \dontrun{
 #' mp <- mungeplane(iris)
 #' (function(plane) plane$data[[1]] <- 2 * plane$data[[1]])(mp)
 #' stopifnot(all.equal(mp$data[[1]], 2 * iris[[1]]))
+#' }
 mungeplane <- function(dataframe) {
   plane <- new.env(parent = parent.frame()) 
   plane$data <- dataframe
@@ -21,6 +23,7 @@ mungeplane <- function(dataframe) {
 }
 
 is.mungeplane <- function(x) inherits(x, 'mungeplane')
+
 
 #setClassUnion('listOrDataFrame', c('list', 'data.frame'))
 #mungeplane <- setRefClass('mungeplane',

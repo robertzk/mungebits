@@ -17,6 +17,7 @@
 #'    mungebit has been run on a dataset already.
 #' @seealso \code{\link{mungepiece}}
 #' @examples
+#' \dontrun{
 #' mp <- mungeplane(iris)
 #' mb <- mungebit(column_transformation(function(col, scale = NULL) {
 #'   if ('scale' %in% names(inputs))
@@ -32,6 +33,8 @@
 #' # > Column scaled by 2
 #' head(mp$data[[1]] / iris[[1]])
 #' # > [1] 4 4 4 4 4 4 
+#' }
+#' 
 mungebit <- setRefClass('mungebit',
   fields = list(train_function = 'function',
                 predict_function = 'function',
@@ -66,16 +69,17 @@ mungebit <- setRefClass('mungebit',
 is.mungebit <- function(x) inherits(x, 'mungebit')
 
 
-#mungebit <- function(train_function,
-#                     predict_function = train_function, 
-#                     modifies.column = TRUE,
-#                     modifies.row = FALSE,
-#                     modifies.column.dimension = FALSE,
-#                     modifies.row.dimension = FALSE) {
-#  function(...) {
-#    arguments <- as.list(...)
-#    #function(df) {
-#    #  do.call(mungebit_function, arguments)
-#  }
-#}
+# S3 class...uglier way to do it
+# mungebit <- function(train_function,
+#                      predict_function = train_function, 
+#                      modifies.column = TRUE,
+#                      modifies.row = FALSE,
+#                      modifies.column.dimension = FALSE,
+#                      modifies.row.dimension = FALSE) {
+#   function(...) {
+#     arguments <- as.list(...)
+#     # function(df) {
+#     #   do.call(mungebit_function, arguments)
+#   }
+# }
 

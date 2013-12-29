@@ -1,8 +1,8 @@
 #' General-purpose data munging
 #'
-#' One can use \code{munge} to take a data.frame, apply a given set
+#' One can use \code{munge} to take a \code{data.frame}, apply a given set
 #' of transformations, and persistently store the operations on
-#' the data.frame, ready to run on a future dataframe.
+#' the \code{data.frame}, ready to run on a future \code{data.frame}.
 #'
 #' @param dataframe a data set to operate on.
 #' @param ... usually a list specifying the necessary operations (see

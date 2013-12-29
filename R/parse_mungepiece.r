@@ -1,4 +1,4 @@
-#' Translate a list of arguments to a mungebit into a mungepiece
+#' Translate a list of arguments passed to a mungebit into a mungepiece
 #'
 #' For example, one can pass a training function, a prediction function,
 #' and additional arguments, and the constructed mungepiece will hold
@@ -16,16 +16,19 @@
 #'   respectively. The given training and prediction functions are used to
 #'   construct a \code{mungebit}, and the resulting \code{mungebit} and 
 #'   the remaining arguments are stored in a \code{mungepiece}.
-#' @return mungepiece the parsed mungepiece
+#' @return the parsed mungepiece
 #' @export
 #' @examples
+#' \dontrun{
 #' doubler <- column_transformation(function(x) x * 2)
 #' mp <- parse_mungepiece(list(doubler, 'Sepal.Length')) 
 #' iris2 <- mungeplane(iris)
 #' mp$run(iris2)
 #' stopifnot(all.equal(iris2$data[[1]], 2 * iris[[1]]))
 #' 
-#' TODO: Way more examples, unit tests
+#' # TODO: Way more examples, unit tests
+#' 
+#' }
 parse_mungepiece <- function(args) {
   if (is.mungepiece(args)) return(args)
   if (is.function(args)) args <- list(args)
@@ -65,3 +68,5 @@ parse_mungepiece <- function(args) {
              train_args,
              predict_args)
 }
+
+
