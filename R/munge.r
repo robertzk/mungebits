@@ -60,8 +60,10 @@ munge <- function(dataframe, ...) {
 
   # Counteract polluting optimization speed-ups from column_transformation
   # and multi_column_transformation
-  if (exists('*tmp.fn.left.by.mungebits.library'))
-    rm('*tmp.fn.left.by.mungebits.library')
+  if (exists('*tmp.fn.left.by.mungebits.library*',
+             envir = parent.frame(), inherit = FALSE)) {
+    rm('*tmp.fn.left.by.mungebits.library*', envir = parent.frame())
+  }
 
   # For now, store the mungepieces on the dataframe
   if (length(mungepieces) > 0)

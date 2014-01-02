@@ -17,6 +17,7 @@
 #' # doubles the Sepal.Length column in the iris dataset
 #' doubler(iris, c('Sepal.Length')) 
 column_transformation <- function(transformation) {
+  force(transformation)
   invisible(function(dataframe, cols = colnames(dataframe), ...) {
     # The fastest way to do this. The alternatives are provided in the comment below
     assign("*tmp.fn.left.by.mungebits.library*",
@@ -35,6 +36,12 @@ column_transformation <- function(transformation) {
       # Slightly slower is:
       # for(i in cols) dataframe[[i]] <-
       #   `*tmp.fn.left.by.mungebits.library*`(dataframe[[i]], ...)
+      dataframe[cols[
+        vapply(cols,
+               function(x) is.null(dataframe[[x]]),
+               logical(1))
+      ]] <- NULL
+
       class(dataframe) <- 'data.frame'
       NULL
     }), envir = parent.frame()))

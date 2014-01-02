@@ -10,7 +10,7 @@ test_that('correctly transforms one column by multiplying by two', {
 
 test_that('correctly creates derivative column that is multiple by two', {
   iris2 <- iris
-  doubler <- multi_column_transformation(function(x, v) v * x)
+  doubler <- multi_column_transformation(`*`)
   doubler(iris2, 'Sepal.Length', 'Sepal.Length2', 2)
   expect_equal(iris2[['Sepal.Length2']], 2 * iris[[1]],
     paste0("multi_column_transformation must create new column 'Sepal.Length2'",
@@ -19,7 +19,7 @@ test_that('correctly creates derivative column that is multiple by two', {
 
 test_that('correctly combines two columns into one new derivative column', {
   iris2 <- iris
-  adder <- multi_column_transformation(function(x, y) x + y)
+  adder <- multi_column_transformation(`+`)
   adder(iris2, c('Sepal.Length', 'Sepal.Width'), 'sum')
   expect_equal(iris2[['sum']], with(iris2, Sepal.Length + Sepal.Width),
    info = paste("multi_column_transformation must create new column 'sum' ",
