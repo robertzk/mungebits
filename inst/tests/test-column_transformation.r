@@ -86,7 +86,7 @@ test_that('correctly imputes means', {
 test_that('correctly passes dots arguments', {
   iris2 <- iris[, 1:4]
   scaler <- column_transformation(function(x, v) v * x)
-  scaler(iris2, 1:4, 2)
+  scaler(iris2, , 2)
   expect_equal(iris2, 2 * iris[, 1:4],
                info = "column_transformation must double first column of iris2")
 })

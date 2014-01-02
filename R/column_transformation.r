@@ -51,7 +51,12 @@ column_transformation <- function(transformation, mutating = FALSE) {
         # <<- operator never modifies local scope using
         #   inputs[[column_name]] <<- inputs
         dataframe[cols] <- lapply(colns, function(column_name) {
-          inputs <- NULL
+          # If this is a prediction run and inputs already exists for this
+          # column, use that, otherwise use NULL
+          inputs <- if (exists('inputs') &&
+                        column_name %in% names(inputs)) inputs[[column_name]]
+                    else NULL
+          # Ensure transformation has access to "inputs"
           environment(`*tmp.fn.left.by.mungebits.library*`) <- environment()
           column <- `*tmp.fn.left.by.mungebits.library*`(dataframe[[column_name]], ...)
           if (!is.null(inputs)) {
