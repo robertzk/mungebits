@@ -1,5 +1,7 @@
 context('column transformations')
 
+# TODO: Test negative indexing
+
 test_that('correctly transforms one column by multiplying by two', {
   iris2 <- iris
   doubler <- column_transformation(function(x) 2 * x)
@@ -98,6 +100,23 @@ test_that('accepts transformation calls with missing arguments', {
   expect_equal(iris2, 2 * iris[, 1:4],
                info = "column_transformation must double first column of iris2")
 })
+
+test_that('correctly uses mutating transformations', {
+  iris2 <- iris
+  mutater <- column_transformation(function(x) { inputs <<- 'test'; x })
+  inputs <- NULL
+  mutater(iris2)
+  expect_equal(inputs, 'test')
+})
+
+test_that('correctly uses named transformations', {
+  iris2 <- iris
+  name_duper <- column_transformation(function(x) {
+    x[[1]] <- rep(names(x)[[1]], length(x[[1]])); x[[1]] }, named = TRUE)
+  name_duper(iris2, 1)
+  expect_equal(iris2[[1]], rep(names(iris)[[1]], nrow(iris)))
+})
+
 
 # This is technically a benchmark but I have no place to put it yet
 test_that('it doubles a column no more than 3.5x as slow as a raw operation', {

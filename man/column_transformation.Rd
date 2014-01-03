@@ -2,11 +2,21 @@
 \alias{column_transformation}
 \title{Pure column transformations.}
 \usage{
-column_transformation(transformation)
+column_transformation(transformation, mutating = FALSE, named = FALSE)
 }
 \arguments{
   \item{transformation}{a function. The only argument
   should be the original column.}
+
+  \item{mutating}{a logical. Announces whether the
+  transformation passed in attempts to maintain state
+  between prediction and training runs using the "inputs"
+  global. (see also \code{\link{mungebit}})}
+
+  \item{named}{a logical. Whether or not the transformation
+  should be passed an atomic vector, or a list of length 1
+  whose single element is given the same name as the column
+  currently being processed.}
 }
 \value{
 a function which takes a data.frame and a vector of columns

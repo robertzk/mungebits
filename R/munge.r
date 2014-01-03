@@ -56,7 +56,10 @@ munge <- function(dataframe, ...) {
   mungepieces <- lapply(mungepieces, parse_mungepiece)
 
   # order matters, do not parallelize!
-  lapply(mungepieces, function(piece) piece$run(plane))
+  lapply(seq_along(mungepieces), function(piece_index) {
+    cat("Running ", names(mungepieces)[piece_index], "...\n")
+    mungepieces[[piece_index]]$run(plane)
+  })
 
   # Counteract polluting optimization speed-ups from column_transformation
   # and multi_column_transformation

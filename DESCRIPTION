@@ -8,7 +8,7 @@ Authors@R: c(person("Robert", "Krzyzanowski",
 Depends:
     R (>= 3.0.2)
 License: MIT
-LazyData: true
+LazyData: false
 Sugests: testthat,
     knitr,
     microbenchmark

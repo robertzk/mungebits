@@ -11,6 +11,9 @@
 #' @param mutating a logical. Announces whether the transformation passed in
 #'    attempts to maintain state between prediction and training runs using
 #'    the "inputs" global. (see also \code{\link{mungebit}})
+#' @param named a logical. Whether or not the transformation should be passed
+#'    an atomic vector, or a list of length 1 whose single element is given
+#'    the same name as the column currently being processed.
 #' @return a function which takes a data.frame and a vector of columns and
 #'    applies the transformation.
 #' @seealso \code{\link{multi_column_transformation}}
@@ -19,15 +22,17 @@
 #' doubler <- column_transformation(function(x) 2*x)
 #' # doubles the Sepal.Length column in the iris dataset
 #' doubler(iris, c('Sepal.Length')) 
-column_transformation <- function(transformation, mutating = FALSE) {
-  force(transformation); force(mutating)
+column_transformation <- function(transformation, mutating = FALSE, named = FALSE) {
+  force(transformation); force(mutating); force(named)
   invisible(function(dataframe, cols = colnames(dataframe), ...) {
     # The fastest way to do this. The alternatives are provided in the comment below
     assign("*tmp.fn.left.by.mungebits.library*",
            transformation, envir = parent.frame())
     mutating <- mutating # Copy from parent scope to this environment
+    named <- named       # Copy from parent scope to this environment
     cols <- force(cols)
-    if (is.logical(cols)) cols <- which(cols)
+    # if (is.logical(cols)) cols <- which(cols)
+    cols <- standard_column_format(cols, dataframe)
     colns <- if (is.character(cols)) cols else colnames(dataframe)[cols]
 
     invisible(eval(substitute({
@@ -37,8 +42,13 @@ column_transformation <- function(transformation, mutating = FALSE) {
       on.exit(class(dataframe) <- 'data.frame')
       if (!mutating) {
         environment(`*tmp.fn.left.by.mungebits.library*`) <- environment()
-        dataframe[cols] <- lapply(dataframe[cols],
-          `*tmp.fn.left.by.mungebits.library*`, ...)
+        if (named)
+          dataframe[cols] <- lapply(colns, function(colname) {
+            `*tmp.fn.left.by.mungebits.library*`(dataframe[colname], ...)
+          })
+        else 
+          dataframe[cols] <- lapply(dataframe[cols],
+            `*tmp.fn.left.by.mungebits.library*`, ...)
       } else {
         # We must now be surgically precise. The transformation function
         # is attempting to store values in "inputs" using inputs <<- ...
@@ -58,7 +68,8 @@ column_transformation <- function(transformation, mutating = FALSE) {
                     else NULL
           # Ensure transformation has access to "inputs"
           environment(`*tmp.fn.left.by.mungebits.library*`) <- environment()
-          column <- `*tmp.fn.left.by.mungebits.library*`(dataframe[[column_name]], ...)
+          column <- `*tmp.fn.left.by.mungebits.library*`(
+            if (named) dataframe[column_name] else dataframe[[column_name]], ...)
           if (!is.null(inputs)) {
             # The <<- operator never modifies local scope so that left "inputs"
             # refers to the parent.frame() whereas the right "inputs" refers
@@ -93,4 +104,8 @@ column_transformation <- function(transformation, mutating = FALSE) {
 # 5: The method above for dynamic lambdas
 # An extra rm function after the assign increases runtime by 75% with frequent application.
 # The fifth option is the fastest.
+
+
+##' @export
+#CT <- column_transformation
 

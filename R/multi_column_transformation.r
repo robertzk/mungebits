@@ -99,4 +99,6 @@ multi_column_transformation <- function(transformation) {
   })
 }
 
+##' @export
+# MCT <- multi_column_transformation
 
