@@ -5,11 +5,13 @@
 \arguments{
   \item{train_fn}{a function. This specifies the behavior
   to perform on the dataset when preparing for model
-  training.}
+  training. A value of NULL specifies that there should be
+  no training step.}
 
   \item{predict_fn}{a function. This specifies the behavior
   to perform on the dataset when preparing for model
-  prediction.}
+  prediction. A value of NULL specifies that there should
+  be no prediction step.}
 
   \item{inputs}{a list. Used for maintaining meta-data
   between training and prediction runs.}

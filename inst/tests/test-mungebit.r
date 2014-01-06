@@ -1,4 +1,5 @@
 context("mungebit reference class")
+require(mungebitsTransformations)
 
 test_that("it correctly sets trained flag after one run", {
   mb <- mungebit(column_transformation(function(x) x))
@@ -20,5 +21,27 @@ test_that("it sets inputs correctly", {
   mb <- mungebit(column_transformation(function(x) { inputs <<- list(1); x }))
   mb$run(mungeplane(iris))
   expect_equal(mb$inputs, list(1))
+})
+
+test_that("it accepts a NULL predict function", {
+  assign("*count*", 0, globalenv())
+  mb <- mungebit(column_transformation(function(x) {
+                                       `*count*` <<- `*count*` + 1; x }), NULL)
+  mb$run(mungeplane(iris), 1)
+  expect_equal(`*count*`, 1)
+  mb$run(mungeplane(iris), 1)
+  expect_equal(`*count*`, 1)
+  rm("*count*", envir = globalenv())
+})
+
+test_that("it accepts a NULL train function", {
+  assign("*count*", 0, globalenv())
+  mb <- mungebit(NULL, column_transformation(function(x) {
+                                       `*count*` <<- `*count*` + 1; x }))
+  mb$run(mungeplane(iris), 1)
+  expect_equal(`*count*`, 0)
+  mb$run(mungeplane(iris), 1)
+  expect_equal(`*count*`, 1)
+  rm("*count*", envir = globalenv())
 })
 

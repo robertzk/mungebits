@@ -1,3 +1,6 @@
+if (!isClass('functionOrNULL'))
+  setClassUnion('functionOrNULL', c('function', 'NULL'))
+
 #' Constructor for mungebit class.
 #'
 #' Mungebits are atomic data transformations of a data.frame that,
@@ -8,9 +11,11 @@
 #' @docType class
 #' @name mungebit
 #' @param train_fn a function. This specifies the behavior to perform
-#'    on the dataset when preparing for model training.
+#'    on the dataset when preparing for model training. A value of NULL
+#'    specifies that there should be no training step.
 #' @param predict_fn a function. This specifies the behavior to perform
-#'    on the dataset when preparing for model prediction.
+#'    on the dataset when preparing for model prediction. A value of NULL
+#'    specifies that there should be no prediction step.
 #' @param inputs a list. Used for maintaining meta-data between
 #'    training and prediction runs.
 #' @param trained a logical. Used for determining whether or not the
@@ -36,8 +41,8 @@
 #' }
 #' 
 mungebit <- setRefClass('mungebit',
-  fields = list(train_function = 'function',
-                predict_function = 'function',
+  fields = list(train_function = 'functionOrNULL',
+                predict_function = 'functionOrNULL',
                 arguments_cache = 'list',
                 inputs = 'list',
                 trained = 'logical'),
@@ -56,12 +61,12 @@ mungebit <- setRefClass('mungebit',
     },
     
     predict = function(mungeplane, ...) {
-      predict_function(mungeplane$data, ...) 
+      if (!is.null(predict_function)) predict_function(mungeplane$data, ...) 
     },
 
     train = function(mungeplane, ...) {
       on.exit(trained <<- TRUE)
-      train_function(mungeplane$data, ...)
+      if (!is.null(train_function)) train_function(mungeplane$data, ...) 
     }
   )
 )

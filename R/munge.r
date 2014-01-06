@@ -57,7 +57,8 @@ munge <- function(dataframe, ...) {
 
   # order matters, do not parallelize!
   lapply(seq_along(mungepieces), function(piece_index) {
-    cat("Running ", names(mungepieces)[piece_index], "...\n")
+    if (length(names(mungepieces)[piece_index]) > 0)
+      cat(names(mungepieces)[piece_index], "...\n")
     mungepieces[[piece_index]]$run(plane)
   })
 

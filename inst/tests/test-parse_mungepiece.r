@@ -1,4 +1,5 @@
 context("parse_mungepiece function")
+require(mungebitsTransformations)
 
 test_that("it correctly parser just a training_function with 1 argument", {
   doubler <- column_transformation(function(x) x * 2)

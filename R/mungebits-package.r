@@ -3,4 +3,5 @@
 #'
 #' @name mungebits
 #' @docType package
+#' @importFrom mungebitsTransformations column_transformation
 NULL

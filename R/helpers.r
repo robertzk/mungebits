@@ -1,2 +1,2 @@
-`%||%` <- function(x, y) { if (is.null(x)) y else x }
+if (!exists("%||%")) `%||%` <- function(x, y) { if (is.null(x)) y else x }
 
