@@ -63,6 +63,10 @@ parse_mungepiece <- function(args) {
     train_args <- args
     predict_args <- train_args
   }
+  stopifnot((is.function(train_fn) || is.null(train_fn)) && 
+            (is.function(predict_fn) || is.null(predict_fn)))
+  if (!is.null(train_fn)) class(train_fn) <- 'function'    # Clear triggers
+  if (!is.null(predict_fn)) class(predict_fn) <- 'function'
 
   mungepiece(mungebit(train_fn, predict_fn),
              train_args,

@@ -44,12 +44,12 @@ munge <- function(dataframe, ...) {
     mungepieces[[1]] <- attr(mungepieces[[1]], 'mungepieces')
 
   # If mungepieces[[1]] is of the form
-  # list(list|mungepiece, list|mungepiece, ...)
+  # list(list|mungepiece|function, list|mungepiece|function, ...)
   # just put it into mungepieces. This is so munge can be called as either
   # munge(dataframe, list(...)) or munge(dataframe, ...)
   if (length(mungepieces) == 1 && is.list(mungepieces[[1]]) &&
       all(unlist(lapply(mungepieces[[1]],
-                        function(x) is.mungepiece(x) || is.list(x))))) {
+        function(x) is.mungepiece(x) || is.list(x) || is.function(x))))) {
       mungepieces <- mungepieces[[1]]
   }
 
