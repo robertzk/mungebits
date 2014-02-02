@@ -113,7 +113,7 @@ parse_function <- function(fn) {
       else inner <- paste0(inner, "(dataframe)")
 
       # This is a little tricky. For optimization, we wrap the function with
-      # eval(substutite(...), envir = parent.frame()) changing the parent
+      # eval(substitute(...), envir = parent.frame()) changing the parent
       # scope directly.
       eval(parse(text = paste0("function(dataframe) eval(substitute(
         dataframe <- ", inner, "), envir = parent.frame())")))
