@@ -107,7 +107,9 @@ parse_function <- function(fn) {
       else column_transformation(fn, named = named, mutating = mutating)
     }
     else if (first_char %in% c('r', 'g')) {
-      inner <- paste0("(function(", names(formals(fn)), ") ", 
+      # TODO: How to make default args work?? Using dput? This sounds like
+      # a rabbithole...
+      inner <- paste0("(function(", paste0(names(formals(fn)), collapse = ','), ") ", 
         paste(deparse(body(fn)), collapse = "\n"), ")")
       if (first_char == 'r') inner <- paste0("apply(dataframe, 1, ", inner, ")")
       else inner <- paste0(inner, "(dataframe)")
