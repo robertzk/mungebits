@@ -39,11 +39,11 @@ parse_mungepiece <- function(args) {
       length(args[[2]]) > 0 && is.function(args[[2]][[1]])) {
     # train and predict functions have separate arguments
     # list(list(train_fn, ...), list(predict_fn, ...))
-    train_fn <- args[[1]][[1]]
+    train_fn <- parse_function(args[[1]][1])
     args[[1]][[1]] <- NULL
     train_args <- args[[1]]
     
-    predict_fn <- args[[2]][[1]]
+    predict_fn <- parse_function(args[[2]][1])
     args[[2]][[1]] <- NULL
     predict_args <- args[[2]]
   } else {
@@ -51,11 +51,11 @@ parse_mungepiece <- function(args) {
     if (is.list(args[[1]])) {
       # list(list(train_fn, predict_fn), ...)
       stopifnot(length(args[[1]]) == 2)
-      train_fn <- args[[1]][[1]]
-      predict_fn <- args[[1]][[2]]
+      train_fn <- parse_function(args[[1]][1])
+      predict_fn <- parse_function(args[[1]][2])
     } else {
       # list(train_fn, ...)
-      train_fn <- args[[1]]
+      train_fn <- parse_function(args[1])
       predict_fn <- train_fn
     }
                       
@@ -65,12 +65,57 @@ parse_mungepiece <- function(args) {
   }
   stopifnot((is.function(train_fn) || is.null(train_fn)) && 
             (is.function(predict_fn) || is.null(predict_fn)))
-  if (!is.null(train_fn)) class(train_fn) <- 'function'    # Clear triggers
-  if (!is.null(predict_fn)) class(predict_fn) <- 'function'
+  #if (!is.null(train_fn)) class(train_fn) <- 'function'    # Clear triggers
+  #if (!is.null(predict_fn)) class(predict_fn) <- 'function'
 
   mungepiece(mungebit(train_fn, predict_fn),
              train_args,
              predict_args)
 }
 
+#' Parse a function for training or prediction.
+#'
+#' This is a helper method to allow one to specify things like:
+#'
+#' \code{list(c = function(column) 2 * column)}           # column transformation
+#' \code{list(r = function(row) ifelse(row < 0, 0, row))} # row transformation
+#' \code{list(g = function(dataframe) 2 * dataframe}      # global transform
+#' \code{list(cn = function(x) paste0(names(x), x[[1]]))} # named column transformation
+#' \code{list(cm = function(x) x * (inputs$rand <<- inputs$rand %||% runif(1, 0, 1))}
+#' # mutating column transformation
+#' \code{list(cnm = function(x) paste0(inputs$name <<- inputs$name %||% names(x), x[[1]]))}
+#' # named mutating column transformation
+#'
+#' @param fn a 1-element list containing a function. The name will decide
+#'    what happens with the function. (See examples)
+parse_function <- function(fn) {
+  name <- names(fn)
+
+  # By default, assume the user wishes to use a column transformation
+  if (is.null(name) || name == '') {
+    if (inherits(fn[[1]], 'transformation')) fn[[1]]
+    else column_transformation(fn[[1]])
+  } else {
+    first_char <- tolower(substr(name, 1, 1))
+    if (first_char == 'c') {
+      chars <- strsplit(tolower(name), '')[[1]]
+      named <- 'n' %in% chars
+      mutating <- 'm' %in% chars
+      if (inherits(fn[[1]], 'transformation')) fn[[1]]
+      else column_transformation(fn[[1]], named = named, mutating = mutating)
+    }
+    else if (first_char == 'r') {
+      function(dataframe) eval(substitute(
+        dataframe <- apply(dataframe, 1, fn[[1]])), envir = parent.frame())
+    }
+    else if (first_char == 'g') {
+      # This is a little tricky. For optimization, we wrap the function with
+      # eval(substutite(...), envir = parent.frame()) changing the parent
+      # scope directly.
+      eval(parse(text = paste0("function(dataframe) eval(substitute(
+        dataframe <- (function(", names(formals(fn[[1]])), ") ", 
+        paste(deparse(body(fn[[1]])), collapse = "\n"), ")(dataframe)), envir = parent.frame())")))
+    }
+  }
+}
 
