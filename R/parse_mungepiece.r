@@ -89,33 +89,36 @@ parse_mungepiece <- function(args) {
 #' @param fn a 1-element list containing a function. The name will decide
 #'    what happens with the function. (See examples)
 parse_function <- function(fn) {
+  stopifnot(is.list(fn) && length(fn) == 1)
   name <- names(fn)
+  fn <- fn[[1]]
 
   # By default, assume the user wishes to use a column transformation
   if (is.null(name) || name == '') {
-    if (inherits(fn[[1]], 'transformation')) fn[[1]]
-    else column_transformation(fn[[1]])
+    if (inherits(fn, 'transformation')) fn
+    else column_transformation(fn)
   } else {
     first_char <- tolower(substr(name, 1, 1))
     if (first_char == 'c') {
       chars <- strsplit(tolower(name), '')[[1]]
       named <- 'n' %in% chars
       mutating <- 'm' %in% chars
-      if (inherits(fn[[1]], 'transformation')) fn[[1]]
-      else column_transformation(fn[[1]], named = named, mutating = mutating)
+      if (inherits(fn, 'transformation')) fn
+      else column_transformation(fn, named = named, mutating = mutating)
     }
-    else if (first_char == 'r') {
-      function(dataframe) eval(substitute(
-        dataframe <- apply(dataframe, 1, fn[[1]])), envir = parent.frame())
-    }
-    else if (first_char == 'g') {
+    else if (first_char %in% c('r', 'g')) {
+      inner <- paste0("(function(", names(formals(fn)), ") ", 
+        paste(deparse(body(fn)), collapse = "\n"), ")")
+      if (first_char == 'r') inner <- paste0("apply(dataframe, 1, ", inner, ")")
+      else inner <- paste0(inner, "(dataframe)")
+
       # This is a little tricky. For optimization, we wrap the function with
       # eval(substutite(...), envir = parent.frame()) changing the parent
       # scope directly.
       eval(parse(text = paste0("function(dataframe) eval(substitute(
-        dataframe <- (function(", names(formals(fn[[1]])), ") ", 
-        paste(deparse(body(fn[[1]])), collapse = "\n"), ")(dataframe)), envir = parent.frame())")))
+        dataframe <- ", inner, "), envir = parent.frame())")))
     }
+    else fn
   }
 }
 
