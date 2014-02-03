@@ -1,5 +1,5 @@
-if (!isClass('functionOrNULL'))
-  setClassUnion('functionOrNULL', c('function', 'NULL'))
+#if (!isClass('functionOrNULL'))
+#  setClassUnion('functionOrNULL', c('function', 'transformation', 'NULL'))
 
 #' Constructor for mungebit class.
 #'
@@ -41,8 +41,8 @@ if (!isClass('functionOrNULL'))
 #' }
 #' 
 mungebit <- setRefClass('mungebit',
-  fields = list(train_function = 'functionOrNULL',
-                predict_function = 'functionOrNULL',
+  fields = list(train_function = 'ANY',
+                predict_function = 'ANY',
                 arguments_cache = 'list',
                 inputs = 'list',
                 trained = 'logical'),
