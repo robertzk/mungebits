@@ -93,6 +93,10 @@ parse_function <- function(fn) {
   name <- names(fn)
   fn <- fn[[1]]
 
+  if (inherits(fn, 'trigger')) {
+    return(fn)
+  }
+
   # By default, assume the user wishes to use a column transformation
   if (is.null(name) || name == '') {
     if (inherits(fn, 'transformation')) fn
