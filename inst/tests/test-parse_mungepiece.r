@@ -34,7 +34,8 @@ test_that(paste0("it correctly parses training and predictions functions ",
   mp <- parse_mungepiece(list(c(imputer, 'Sepal.Length'),
                               c(restorer, 1, mean(iris[[1]]))))
   mp$run(mungeplane(iris))
-  plane <- mungeplane(data.frame(cbind(NA_real_)))
+  plane <- mungeplane(structure(data.frame(cbind(NA_real_)), names = names(iris)[1]))
+  
   mp$run(plane)
   expect_equal(mean(iris[[1]]), plane$data[1, 1],
     info = paste("plane$data should have had its one missing value imputed",
