@@ -7,6 +7,8 @@
 #' @param dataframe a data set to operate on.
 #' @param ... usually a list specifying the necessary operations (see
 #'    examples).
+#' @param stagerunner logical. Whether to run the munge procedure or
+#'    return the parametrizing stageRunner object (see package stagerunner).
 #' @return data.frame that has had the specified operations applied to it,
 #'    along with an additional property \code{mungepieces} that records
 #'    the history of applied functions. These can be used to reproduce
@@ -31,7 +33,7 @@
 #' # prediction routine instead of the training routine. Note the above is
 #' # also equivalent to the shortcut: munge(iris, iris2)
 #' stopifnot(iris3[['Sepal.Length']] == iris[['Sepal.Length']] * 3)
-munge <- function(dataframe, ...) {
+munge <- function(dataframe, ..., stagerunner = FALSE) {
   mungepieces <- list(...)
   if (length(mungepieces) == 0) return(dataframe)
 
@@ -56,15 +58,24 @@ munge <- function(dataframe, ...) {
   mungepieces <- lapply(mungepieces, parse_mungepiece)
 
   # order matters, do not parallelize!
-  lapply(seq_along(mungepieces), function(piece_index) {
-    if (length(names(mungepieces)[piece_index]) > 0)
-      cat(names(mungepieces)[piece_index], "...\n")
-    mungepieces[[piece_index]]$run(plane)
+  stages <- lapply(seq_along(mungepieces), function(piece_index) {
+    function(env) {
+      if (length(names(mungepieces)[piece_index]) > 0)
+        cat(names(mungepieces)[piece_index], "...\n")
+      mungepieces[[piece_index]]$run(env)
+    }
   })
+  stages <- append(stages, list(function(env) {
+    # For now, store the mungepieces on the dataframe
+    if (length(mungepieces) > 0)
+      attr(env$data, 'mungepieces') <- append(old_mungepieces, mungepieces)
+  }))
+  runner <- stageRunner$new(as(plane, 'environment'), stages)
 
-  # For now, store the mungepieces on the dataframe
-  if (length(mungepieces) > 0)
-    attr(plane$data, 'mungepieces') <- append(old_mungepieces, mungepieces)
-  plane$data
+  if (stagerunner) runner
+  else {
+    runner$run()
+    plane$data
+  }
 }
 
