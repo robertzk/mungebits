@@ -60,3 +60,14 @@ test_that("it correctly handles a single argument that is not a nested list", {
   expect_equal(iris2[[1]], iris[[1]] * 3)
 })
 
+test_that("it procures the correct stagerunner", {
+  args <- lapply(seq_len(2),
+    function(.) list(column_transformation(function(x) 2*x), 1))
+  sr <- munge(iris, args, stagerunner = TRUE)
+  expect_is(sr, 'stageRunner')
+  expect_equal(length(sr$stages), 3)
+  tmp <- new.env(); tmp$data <- iris
+  sr$stages[[1]](tmp)
+  expect_equal(tmp$data[[1]], 2 * iris[[1]])
+})
+
