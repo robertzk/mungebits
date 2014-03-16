@@ -16,8 +16,11 @@
 #' stopifnot(all.equal(mp$data[[1]], 2 * iris[[1]]))
 #' }
 mungeplane <- function(dataframe) {
-  plane <- new.env(parent = parent.frame()) 
-  plane$data <- dataframe
+  if (is.environment(dataframe)) plane <- dataframe
+  else {
+    plane <- new.env(parent = parent.frame()) 
+    plane$data <- dataframe
+  }
   class(plane) <- 'mungeplane'
   plane
 }
