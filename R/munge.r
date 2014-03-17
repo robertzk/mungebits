@@ -7,8 +7,10 @@
 #' @param dataframe a data set to operate on.
 #' @param ... usually a list specifying the necessary operations (see
 #'    examples).
-#' @param stagerunner logical. Whether to run the munge procedure or
+#' @param stagerunner logical or list. Whether to run the munge procedure or
 #'    return the parametrizing stageRunner object (see package stagerunner).
+#'    If a list, one can specify \code{remember = TRUE} to pass to the
+#'    stageRunner initializer.
 #' @return data.frame that has had the specified operations applied to it,
 #'    along with an additional property \code{mungepieces} that records
 #'    the history of applied functions. These can be used to reproduce
@@ -70,9 +72,10 @@ munge <- function(dataframe, ..., stagerunner = FALSE) {
     if (length(mungepieces) > 0)
       attr(env$data, 'mungepieces') <- append(old_mungepieces, mungepieces)
   }))
-  runner <- stageRunner$new(as(plane, 'environment'), stages)
+  remember <- if ('remember' %in% names(stagerunner)) stagerunner$remember else FALSE
+  runner <- stageRunner$new(as(plane, 'environment'), stages, remember = remember)
 
-  if (stagerunner) runner
+  if (!missing(stagerunner) && !identical(stagerunner, FALSE)) runner
   else {
     runner$run()
     plane$data
