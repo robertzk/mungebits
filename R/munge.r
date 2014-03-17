@@ -58,11 +58,11 @@ munge <- function(dataframe, ..., stagerunner = FALSE) {
   mungepieces <- lapply(mungepieces, parse_mungepiece)
 
   # order matters, do not parallelize!
-  stages <- lapply(seq_along(mungepieces), function(piece_index) {
+  stages <- lapply(lapply(mungepieces, list), function(piece) {
+    force(piece)
     function(env) {
-      if (length(names(mungepieces)[piece_index]) > 0)
-        cat(names(mungepieces)[piece_index], "...\n")
-      mungepieces[[piece_index]]$run(env)
+      if (!is.null(name <- names(piece)) && name != "") cat(name, "...\n")
+      piece[[1]]$run(env)
     }
   })
   stages <- append(stages, list(function(env) {

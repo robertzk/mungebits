@@ -13,10 +13,10 @@ test_that("it correctly adds to the mungepieces list", {
 })
 
 test_that("it correctly munges a simple mungepiece sequence", {
-  args <- lapply(seq_len(2),
-    function(.) list(column_transformation(function(x, v) v * x), 1, 2))
+  args <- lapply(seq_len(2) + 1,
+    function(x) list(column_transformation(function(x, v) v * x), 1, x))
   iris2 <- munge(iris, args)
-  expect_equal(iris2[[1]], iris[[1]] * 4)
+  expect_equal(iris2[[1]], iris[[1]] * 6)
 })
 
 test_that("it correctly predicts a simple mungepiece sequence", {
