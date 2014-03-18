@@ -72,7 +72,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE) {
     if (length(mungepieces) > 0)
       attr(env$data, 'mungepieces') <- append(old_mungepieces, mungepieces)
   }))
-  names(stages)[length(stages)] <- "Store munge procedure on dataframe"
+  names(stages)[length(stages)] <- "(Internal) Store munge procedure on dataframe"
 
   remember <- if ('remember' %in% names(stagerunner)) stagerunner$remember else FALSE
   runner <- stageRunner$new(as(plane, 'environment'), stages, remember = remember)
