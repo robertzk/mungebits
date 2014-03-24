@@ -1,2 +1,6 @@
-.onUnload <- function(libpath) {
+.onAttach <- function(...) {
+  require(stagerunner)
+}
+
+.onUnload <- function(...) {
 }

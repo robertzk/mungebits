@@ -2,13 +2,19 @@
 \alias{munge}
 \title{General-purpose data munging}
 \usage{
-munge(dataframe, ...)
+munge(dataframe, ..., stagerunner = FALSE)
 }
 \arguments{
   \item{dataframe}{a data set to operate on.}
 
   \item{...}{usually a list specifying the necessary
   operations (see examples).}
+
+  \item{stagerunner}{logical or list. Whether to run the
+  munge procedure or return the parametrizing stageRunner
+  object (see package stagerunner).  If a list, one can
+  specify \code{remember = TRUE} to pass to the stageRunner
+  initializer.}
 }
 \value{
 data.frame that has had the specified operations applied to
