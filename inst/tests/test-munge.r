@@ -71,3 +71,14 @@ test_that("it procures the correct stagerunner", {
   expect_equal(tmp$data[[1]], 2 * iris[[1]])
 })
 
+test_that("it procures a stagerunner with training only if train_only = TRUE", {
+  args <- lapply(seq_len(2),
+    function(.) list(column_transformation(function(x) 2*x), 1))
+  sr <- munge(iris, args, stagerunner = TRUE, train_only = TRUE)
+  expect_is(sr, 'stageRunner')
+  expect_equal(length(sr$stages), 3)
+  tmp <- new.env(); tmp$data <- iris
+  sr$run()
+  expect_false(environment(sr$stages[[1]]$fn)$piece$bit$trained)
+})
+
