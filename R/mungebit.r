@@ -52,17 +52,18 @@ mungebit <- setRefClass('mungebit',
       trained <<- FALSE
     },
     
-    run = function(mungeplane, ...) {
+    run = function(mungeplane, ..., without_train = FALSE) {
       if (!trained) do.call(.self$train, list(mungeplane, ...))
       else do.call(.self$predict, list(mungeplane, ...))
+      if (without_train) trained <<- FALSE
       invisible()
     },
     
-    predict = function(mungeplane, ...) {
+    predict = function(mungeplane, ..., without_train = FALSE) {
       if (!is.null(predict_function)) predict_function(mungeplane$data, ...) 
     },
 
-    train = function(mungeplane, ...) {
+    train = function(mungeplane, ..., without_train = FALSE) {
       if (!is.null(train_function)) {
         train_function(mungeplane$data, ...) 
         if (!is.null(predict_function)) {
@@ -70,7 +71,7 @@ mungebit <- setRefClass('mungebit',
             parent.env(environment(train_function))$inputs
         }
       }
-      trained <<- TRUE
+      if (identical(without_train, FALSE)) trained <<- TRUE
     }
   )
 )

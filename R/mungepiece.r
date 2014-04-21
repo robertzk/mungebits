@@ -44,11 +44,11 @@ mungepiece <- setRefClass('mungepiece',
       predict_args <<- .predict_args
     },
 
-    run = function(.mungeplane) {
+    run = function(.mungeplane, ...) {
       method <- if (bit$trained) bit$predict else bit$train
-      rest_args <-
+      rest_args <- merge(
         if (bit$trained) predict_args %||% train_args
-        else train_args
+        else train_args, list(...))
       do.call(method, append(list(.mungeplane), rest_args))
     }
   )
