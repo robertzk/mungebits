@@ -45,15 +45,16 @@ mungebit <- setRefClass('mungebit',
                 trained = 'logical'),
   methods = list(
     initialize = function(train_fn = function(x) x, predict_fn = train_fn) {
-      train_function <<- train_fn
-      predict_function <<- predict_fn
+      train_function <<- inject_inputs(train_fn)
+      predict_function <<- inject_inputs(predict_fn)
+
       inputs <<- list()
       trained <<- FALSE
     },
     
     run = function(mungeplane, ...) {
-      if (!trained) train(mungeplane, ...)
-      else predict(mungeplane, ...)
+      if (!trained) do.call(.self$train, list(mungeplane, ...))
+      else do.call(.self$predict, list(mungeplane, ...))
       invisible()
     },
     
@@ -62,14 +63,32 @@ mungebit <- setRefClass('mungebit',
     },
 
     train = function(mungeplane, ...) {
-      on.exit(trained <<- TRUE)
-      if (!is.null(train_function)) train_function(mungeplane$data, ...) 
+      if (!is.null(train_function)) {
+        train_function(mungeplane$data, ...) 
+        if (!is.null(predict_function)) {
+          parent.env(environment(predict_function))$inputs <<-
+            parent.env(environment(train_function))$inputs
+        }
+      }
+      trained <<- TRUE
     }
   )
 )
 
 is.mungebit <- function(x) inherits(x, 'mungebit')
 
+#' Inject a parent environment that has only an inputs key so that
+#' things like \code{inputs <<- 'foo'} work.
+#'
+#' @param fn function. The function on which to inject.
+inject_inputs <- function(fn) {
+  if (is.null(fn)) return(NULL)
+  middle_parent <- new.env()
+  middle_parent$inputs <- list()
+  parent.env(middle_parent) <- parent.env(environment(fn))
+  parent.env(environment(fn)) <- middle_parent
+  fn
+}
 
 # S3 class...uglier way to do it
 # mungebit <- function(train_function,

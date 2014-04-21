@@ -45,3 +45,12 @@ test_that("it accepts a NULL train function", {
   rm("*count*", envir = globalenv())
 })
 
+test_that("it can read inputs", {
+  mb <- mungebit(function(df) {
+    if (!'foo' %in% names(inputs)) { inputs$foo <<- 1; print("one") }
+    else print("two") })
+  mp <- mungeplane(iris)
+  expect_output(mb$run(mp), "one")
+  expect_output(mb$run(mp), "two")
+})
+
