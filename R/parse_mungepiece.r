@@ -4,6 +4,7 @@
 #' and additional arguments, and the constructed mungepiece will hold
 #' these arguments, ready to call the attached mungebit on a given dataframe.
 #'
+#' @name parse_mungepiece
 #' @param args a list. This can be of the formats
 #'   \code{list(train_fn, ...)}, \code{list(list(train_fn, predict_fn), ...)},
 #'   and \code{list(list(train_fn, ...), list(predict_fn))}. In the first

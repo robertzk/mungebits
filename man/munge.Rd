@@ -30,6 +30,7 @@ operations on the \code{data.frame}, ready to run on a
 future \code{data.frame}.
 }
 \examples{
+\dontrun{
 iris2 <- munge(iris,
   list(column_transformation(function(x) 2 * x), 'Sepal.Length'))
 stopifnot(iris2[['Sepal.Length']] == iris[['Sepal.Length']] * 2)
@@ -47,5 +48,6 @@ iris3 <- munge(iris, attr(iris2, 'mungepieces'))
 # prediction routine instead of the training routine. Note the above is
 # also equivalent to the shortcut: munge(iris, iris2)
 stopifnot(iris3[['Sepal.Length']] == iris[['Sepal.Length']] * 3)
+}
 }
 

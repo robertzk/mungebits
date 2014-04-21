@@ -67,7 +67,7 @@ test_that("it procures the correct stagerunner", {
   expect_is(sr, 'stageRunner')
   expect_equal(length(sr$stages), 3)
   tmp <- new.env(); tmp$data <- iris
-  sr$stages[[1]](tmp)
+  sr$stages[[1]]$fn(tmp)
   expect_equal(tmp$data[[1]], 2 * iris[[1]])
 })
 
