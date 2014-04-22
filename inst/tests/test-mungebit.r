@@ -54,8 +54,8 @@ test_that("it can read inputs", {
   expect_output(mb$run(mp), "two")
 })
 
-test_that("it does not set trained = TRUE if without_train = TRUE", {
-  mb <- mungebit(column_transformation(function(x) x))
-  mb$run(mungeplane(iris), without_train = TRUE)
+test_that("it does not set trained = TRUE if enforce_train = FALSE", {
+  mb <- mungebit(column_transformation(function(x) x), enforce_train = FALSE)
+  mb$run(mungeplane(iris))
   expect_false(mb$trained)
 })

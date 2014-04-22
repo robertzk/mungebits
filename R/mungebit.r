@@ -42,28 +42,29 @@ mungebit <- setRefClass('mungebit',
                 predict_function = 'ANY',
                 arguments_cache = 'list',
                 inputs = 'list',
-                trained = 'logical'),
+                trained = 'logical',
+                enforce_train = 'logical'),
   methods = list(
-    initialize = function(train_fn = function(x) x, predict_fn = train_fn) {
+    initialize = function(train_fn = function(x) x, predict_fn = train_fn, enforce_train = TRUE) {
       train_function <<- inject_inputs(train_fn)
       predict_function <<- inject_inputs(predict_fn)
 
       inputs <<- list()
       trained <<- FALSE
+      enforce_train <<- enforce_train
     },
     
-    run = function(mungeplane, ..., without_train = FALSE) {
+    run = function(mungeplane, ...) {
       if (!trained) do.call(.self$train, list(mungeplane, ...))
       else do.call(.self$predict, list(mungeplane, ...))
-      if (without_train) trained <<- FALSE
       invisible()
     },
     
-    predict = function(mungeplane, ..., without_train = FALSE) {
+    predict = function(mungeplane, ...) {
       if (!is.null(predict_function)) predict_function(mungeplane$data, ...) 
     },
 
-    train = function(mungeplane, ..., without_train = FALSE) {
+    train = function(mungeplane, ...) {
       if (!is.null(train_function)) {
         train_function(mungeplane$data, ...) 
         if (!is.null(predict_function)) {
@@ -71,7 +72,7 @@ mungebit <- setRefClass('mungebit',
             parent.env(environment(train_function))$inputs
         }
       }
-      if (identical(without_train, FALSE)) trained <<- TRUE
+      if (enforce_train) trained <<- TRUE
     }
   )
 )

@@ -65,16 +65,12 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
       mungepieces <- mungepieces[[1]]
   }
 
-  mungepieces <- lapply(mungepieces, parse_mungepiece)
+  mungepieces <- lapply(mungepieces, parse_mungepiece,
+                        train_only = !identical(train_only, FALSE))
 
   # order matters, do not parallelize!
-  train_only <- !identical(train_only, FALSE)
-  stages <- lapply(lapply(mungepieces, list), function(piece) {
-    piece <- piece[[1]]
-    function(env) {
-      if (!is.null(name <- names(piece)) && name != "") cat(name, "...\n")
-      piece$run(env, without_train = train_only)
-    }
+  stages <- lapply(mungepieces, function(piece) {
+    force(piece); function(env) piece$run(env)
   })
   stages <- append(stages, list(function(env) {
     # For now, store the mungepieces on the dataframe
