@@ -10,7 +10,7 @@ test_that("it correctly parser just a training_function with 1 argument", {
     info = "First column of iris2$data should be twice first column of iris")
 })
 
-test_that(paste0("it correctly parser a training_function with ",
+test_that(paste0("it correctly parses a training_function with ",
                  "different prediction_function with same arguments"), {
   doubler <- column_transformation(function(x) x * 2)
   tripler <- column_transformation(function(x) x * 3)
@@ -57,5 +57,15 @@ test_that("it correctly uses the inputs keyword to cache results", {
     info = paste("plane$data should have had its one missing value imputed",
                  "with the mean of the first column of iris by caching the",
                  "mean in the inputs field of the mungebit"))
+})
+
+test_that("it correctly uses the train_only argument", {
+  doubler <- column_transformation(function(x) x * 2)
+  mp <- parse_mungepiece(list(list(doubler, NULL), 'Sepal.Length'), train_only = TRUE)
+  iris2 <- mungeplane(iris)
+  mp$run(iris2)
+  mp$run(iris2)
+  expect_equal(iris2$data[[1]], 4 * iris[[1]],
+    info = "The mungepiece should not run prediction")
 })
 

@@ -8,8 +8,8 @@ parse_mungepiece(args)
   \item{args}{a list. This can be of the formats
   \code{list(train_fn, ...)}, \code{list(list(train_fn,
   predict_fn), ...)}, and \code{list(list(train_fn, ...),
-  list(predict_fn))}. In the first example, the train and
-  predict function are assumed to be identical. In the
+  list(predict_fn, ...))}. In the first example, the train
+  and predict function are assumed to be identical. In the
   first two examples, the arguments to these functions are
   assumed to be identical (for example, if the same kind of
   filter needs to be applied to a data set that is about to

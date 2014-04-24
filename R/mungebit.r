@@ -42,14 +42,16 @@ mungebit <- setRefClass('mungebit',
                 predict_function = 'ANY',
                 arguments_cache = 'list',
                 inputs = 'list',
-                trained = 'logical'),
+                trained = 'logical',
+                enforce_train = 'logical'),
   methods = list(
-    initialize = function(train_fn = function(x) x, predict_fn = train_fn) {
+    initialize = function(train_fn = function(x) x, predict_fn = train_fn, enforce_train = TRUE) {
       train_function <<- inject_inputs(train_fn)
       predict_function <<- inject_inputs(predict_fn)
 
       inputs <<- list()
       trained <<- FALSE
+      enforce_train <<- enforce_train
     },
     
     run = function(mungeplane, ...) {
@@ -70,7 +72,7 @@ mungebit <- setRefClass('mungebit',
             parent.env(environment(train_function))$inputs
         }
       }
-      trained <<- TRUE
+      if (enforce_train) trained <<- TRUE
     }
   )
 )

@@ -17,6 +17,12 @@
 #'   respectively. The given training and prediction functions are used to
 #'   construct a \code{mungebit}, and the resulting \code{mungebit} and 
 #'   the remaining arguments are stored in a \code{mungepiece}.
+#' @param train_only logical. Whether or not to leave the \code{trained}
+#'    parameter on each mungebit to \code{TRUE} or \code{FALSE} accordingly.
+#'    For example, if \code{stagerunner = TRUE} and we are planning to re-use
+#'    the stagerunner for prediction, it makes sense to leave the mungebits
+#'    untrained. (Note that this will prevent one from being able to run the
+#'    predict functions!)
 #' @return the parsed mungepiece
 #' @export
 #' @examples
@@ -30,7 +36,7 @@
 #' # TODO: Way more examples, unit tests
 #' 
 #' }
-parse_mungepiece <- function(args) {
+parse_mungepiece <- function(args, train_only = FALSE) {
   if (is.mungepiece(args)) return(args)
   if (is.function(args)) args <- list(args)
   stopifnot(is.list(args))  
@@ -69,7 +75,7 @@ parse_mungepiece <- function(args) {
   if (!is.null(train_fn)) class(train_fn) <- 'function'    # Clear triggers
   if (!is.null(predict_fn)) class(predict_fn) <- 'function'
 
-  mungepiece(mungebit(train_fn, predict_fn),
+  mungepiece(mungebit(train_fn, predict_fn, enforce_train = !train_only),
              train_args,
              predict_args)
 }

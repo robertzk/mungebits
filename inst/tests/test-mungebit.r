@@ -3,7 +3,7 @@ require(mungebitsTransformations)
 
 test_that("it correctly sets trained flag after one run", {
   mb <- mungebit(column_transformation(function(x) x))
-  expect_true(!mb$trained)
+  expect_false(mb$trained)
   mb$run(mungeplane(iris))
   expect_true(mb$trained)
 })
@@ -54,3 +54,8 @@ test_that("it can read inputs", {
   expect_output(mb$run(mp), "two")
 })
 
+test_that("it does not set trained = TRUE if enforce_train = FALSE", {
+  mb <- mungebit(column_transformation(function(x) x), enforce_train = FALSE)
+  mb$run(mungeplane(iris))
+  expect_false(mb$trained)
+})
