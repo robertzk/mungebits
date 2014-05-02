@@ -46,7 +46,7 @@ mungepiece <- setRefClass('mungepiece',
 
     run = function(.mungeplane, ...) {
       method <- if (bit$trained) bit$predict else bit$train
-      rest_args <- merge(
+      rest_args <- list_merge(
         if (bit$trained) predict_args %||% train_args
         else train_args, list(...))
       do.call(method, append(list(.mungeplane), rest_args))
@@ -55,6 +55,15 @@ mungepiece <- setRefClass('mungepiece',
 )
 
 is.mungepiece <- function(x) inherits(x, 'mungepiece')
+
+list_merge <- function(list1, list2) {
+  for (i in seq_along(list2)) {
+    name <- names(list2)[i]
+    if (!identical(name, NULL) && !identical(name, "")) list1[[name]] <- list2[[i]]
+    else list1 <- append(list1, list(list2[[i]]))
+  }
+  list1
+}
     
 # S3 definition... uglier I think, since you need to knwo the calling convention
 #mungepiece <- function(bit, train_args, predict_args = train_args) {
@@ -67,3 +76,4 @@ is.mungepiece <- function(x) inherits(x, 'mungepiece')
 #  attr(mp, 'predict_args') <- predict_args
 #  mp
 #}
+

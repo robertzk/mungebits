@@ -55,7 +55,8 @@ mungebit <- setRefClass('mungebit',
     },
     
     run = function(mungeplane, ...) {
-      (if (!trained) .self$train else .self$predict)(mungeplane, ...)
+      do.call(if (!trained) .self$train else .self$predict,
+              list(mungeplane, ...))
       invisible()
     },
     
@@ -88,8 +89,7 @@ mungebit <- setRefClass('mungebit',
         # is being set--I think this has to do with changing the environment of
         # the function that's running. How do we get around this? This seems
         # incredibly messy.
-        # inputs <<- if (length(run_env$inputs) > 0) run_env$inputs else inputs
-        inputs <<- inputs # run_env$inputs
+        inputs <<- if (length(run_env$inputs) > 0) run_env$inputs else inputs
       }
       if (enforce_train) trained <<- TRUE
       invisible(TRUE)
