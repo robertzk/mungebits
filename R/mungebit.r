@@ -55,24 +55,44 @@ mungebit <- setRefClass('mungebit',
     },
     
     run = function(mungeplane, ...) {
-      if (!trained) do.call(.self$train, list(mungeplane, ...))
-      else do.call(.self$predict, list(mungeplane, ...))
+      (if (!trained) .self$train else .self$predict)(mungeplane, ...)
       invisible()
     },
     
     predict = function(mungeplane, ...) {
-      if (!is.null(predict_function)) predict_function(mungeplane$data, ...) 
+      if (!is.null(predict_function)) {
+        run_env <- new.env(parent = environment(predict_function))
+        run_env$inputs <- inputs
+        debug_flag <- isdebugged(predict_function)
+        environment(predict_function) <<- run_env
+        on.exit(environment(predict_function) <<- parent.env(run_env))
+        if (debug_flag) debug(predict_function)
+
+        predict_function(mungeplane$data, ...) 
+      }
+      invisible(TRUE)
     },
 
     train = function(mungeplane, ...) {
       if (!is.null(train_function)) {
+        run_env <- new.env(parent = environment(train_function))
+        run_env$inputs <- list()
+        debug_flag <- isdebugged(train_function)
+        environment(train_function) <<- run_env
+        on.exit(environment(train_function) <<- parent.env(run_env))
+        if (debug_flag) debug(train_function)
+
         train_function(mungeplane$data, ...) 
-        if (!is.null(predict_function)) {
-          parent.env(environment(predict_function))$inputs <<-
-            parent.env(environment(train_function))$inputs
-        }
+
+        # TODO: Oh no. :( Sometimes inputs is being set and sometimes run_env$inputs
+        # is being set--I think this has to do with changing the environment of
+        # the function that's running. How do we get around this? This seems
+        # incredibly messy.
+        # inputs <<- if (length(run_env$inputs) > 0) run_env$inputs else inputs
+        inputs <<- inputs # run_env$inputs
       }
       if (enforce_train) trained <<- TRUE
+      invisible(TRUE)
     }
   )
 )
