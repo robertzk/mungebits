@@ -6,12 +6,13 @@ Version: 0.2.1
 Authors@R: c(person("Robert", "Krzyzanowski",
     email = "technoguyrob@gmail.com", role = c("aut", "cre")))
 Depends:
-    R (>= 3.0.1),
-    stagerunner
+    R (>= 3.0.1)
 Imports:
     mungebitsTransformations
 License: MIT
 LazyData: true
 Sugests: testthat,
     knitr,
-    microbenchmark
+    microbenchmark,
+    stagerunner
+Roxygen: list(wrap = FALSE)

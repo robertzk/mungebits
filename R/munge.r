@@ -76,6 +76,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE) {
   }))
   names(stages)[length(stages)] <- "(Internal) Store munge procedure on dataframe"
 
+  if (!missing(stagerunner) && !identical(stagerunner, FALSE)) require(stagerunner)
   remember <- if ('remember' %in% names(stagerunner)) stagerunner$remember else FALSE
   runner <- stageRunner$new(as(plane, 'environment'), stages, remember = remember)
 
