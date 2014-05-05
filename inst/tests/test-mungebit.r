@@ -19,7 +19,6 @@ test_that("it correctly executes training and prediction function", {
 
 test_that("it sets inputs correctly", {
   mb <- mungebit(column_transformation(function(x) { inputs <<- list(1); x }))
-  # browser()
   mb$run(mungeplane(iris))
 
   expect_equal(mb$inputs, list(1))
