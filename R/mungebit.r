@@ -45,7 +45,8 @@ mungebit <- setRefClass('mungebit',
                 trained = 'logical',
                 enforce_train = 'logical'),
   methods = list(
-    initialize = function(train_fn = function(x) x, predict_fn = train_fn, enforce_train = TRUE) {
+    initialize = function(train_fn = function(x) x, predict_fn = train_fn,
+                          enforce_train = TRUE) {
       train_function <<- train_fn
       predict_function <<- predict_fn
 
