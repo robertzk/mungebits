@@ -37,63 +37,94 @@
 #' # > [1] 4 4 4 4 4 4 
 #' }
 #' 
+mungebit__initialize <- function(train_fn = function(x) x,
+                                  predict_fn = train_fn, enforce_train = TRUE) {
+  train_function <<- train_fn
+  predict_function <<- predict_fn
+
+  inputs <<- list()
+  trained <<- FALSE
+  enforce_train <<- enforce_train
+}
+
+#' Run a mungebit.
+#' 
+#' Imagine flipping a switch on a set of train tracks. A mungebit
+#' behaves like this: once the \code{trained} switch is flipped,
+#' it can only run the \code{predict_fn}, otherwise it will
+#' run the \code{train_fn}.
+#'
+#' @alias mungebit__initialize
+#' @param mungeplane mungeplane. Essentially an environment containing
+#'   a \code{data} variable.
+#' @param ... additional arguments to the mungebit's \code{train_fn} or
+#'   \code{predict_fn}.
+#' @seealso \code{\link{mungebit__initialize}}
+mungebit__run <- function(mungeplane, ...) {
+  # We cannot use, e.g., .self$train(mungeplane, ...),
+  # because we must force the ... to get evaluated due to
+  # non-standard evaluation in the train and predict methods.
+  do.call(if (!trained) .self$train else .self$predict,
+          list(mungeplane, ...))
+  invisible()
+}
+
+#' Run the predict function on a mungebit.
+#'
+#' @alias mungebit__initialize
+#' @param mungeplane mungeplane. Essentially an environment containing
+#'   a \code{data} variable.
+#' @param ... additional arguments to the mungebit's \code{predict_fn}.
+#' @seealso \code{\link{mungebit__run}}, \code{\link{mungebit__initialize}}
+mungebit__predict <- function(mungeplane, ...) {
+  if (!is.null(predict_function)) {
+    inject_inputs(predict_function)
+    on.exit(environment(predict_function) <<-
+      parent.env(environment(predict_function)))
+
+    predict_function(mungeplane$data, ...) 
+  }
+  invisible(TRUE)
+}
+
+#' Run the train function on a mungebit.
+#'
+#' @alias mungebit__initialize
+#' @param mungeplane mungeplane. Essentially an environment containing
+#'   a \code{data} variable.
+#' @param ... additional arguments to the mungebit's \code{train_fn}.
+#' @seealso \code{\link{mungebit__run}}, \code{\link{mungebit__initialize}}
+mungebit__train <- function(mungeplane, ...) {
+  if (!is.null(train_function)) {
+    inject_inputs(train_function)
+    on.exit(environment(train_function) <<-
+      parent.env(environment(train_function)))
+
+    train_function(mungeplane$data, ...) 
+
+    # TODO: Oh no. :( Sometimes inputs is being set and sometimes
+    # environment(train_function)$inputs is being set--I think this
+    # has to do with changing the environment of the function that's
+    # running. How do we get around this? This seems incredibly messy.
+    inputs <<-
+      if (length(tmp <- environment(train_function)$inputs) > 0) tmp
+      else inputs
+  }
+  if (enforce_train) trained <<- TRUE
+  invisible(TRUE)
+}
+
 mungebit <- setRefClass('mungebit',
   fields = list(train_function = 'ANY',
                 predict_function = 'ANY',
-                arguments_cache = 'list',
                 inputs = 'list',
                 trained = 'logical',
                 enforce_train = 'logical'),
   methods = list(
-    initialize = function(train_fn = function(x) x, predict_fn = train_fn,
-                          enforce_train = TRUE) {
-      train_function <<- train_fn
-      predict_function <<- predict_fn
-
-      inputs <<- list()
-      trained <<- FALSE
-      enforce_train <<- enforce_train
-    },
-    
-    run = function(mungeplane, ...) {
-      # We cannot use, e.g., .self$train(mungeplane, ...),
-      # because we must force the ... to get evaluated due to
-      # non-standard evaluation in the train and predict methods.
-      do.call(if (!trained) .self$train else .self$predict,
-              list(mungeplane, ...))
-      invisible()
-    },
-    
-    predict = function(mungeplane, ...) {
-      if (!is.null(predict_function)) {
-        inject_inputs(predict_function)
-        on.exit(environment(predict_function) <<-
-          parent.env(environment(predict_function)))
-
-        predict_function(mungeplane$data, ...) 
-      }
-      invisible(TRUE)
-    },
-
-    train = function(mungeplane, ...) {
-      if (!is.null(train_function)) {
-        inject_inputs(train_function)
-        on.exit(environment(train_function) <<-
-          parent.env(environment(train_function)))
-
-        train_function(mungeplane$data, ...) 
-
-        # TODO: Oh no. :( Sometimes inputs is being set and sometimes
-        # environment(train_function)$inputs is being set--I think this
-        # has to do with changing the environment of the function that's
-        # running. How do we get around this? This seems incredibly messy.
-        inputs <<-
-          if (length(tmp <- environment(train_function)$inputs) > 0) tmp
-          else inputs
-      }
-      if (enforce_train) trained <<- TRUE
-      invisible(TRUE)
-    }
+    initialize = mungebits:::mungebit__initialize,
+    run        = mungebits:::mungebit__run,
+    predict    = mungebits:::mungebit__predict,
+    train      = mungebits:::mungebit__train
   )
 )
 
