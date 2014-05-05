@@ -55,6 +55,9 @@ mungebit <- setRefClass('mungebit',
     },
     
     run = function(mungeplane, ...) {
+      # We cannot use, e.g., .self$train(mungeplane, ...),
+      # because we must force the ... to get evaluated due to
+      # non-standard evaluation in the train and predict methods.
       do.call(if (!trained) .self$train else .self$predict,
               list(mungeplane, ...))
       invisible()
