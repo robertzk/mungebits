@@ -62,12 +62,24 @@ test_that("it correctly handles a single argument that is not a nested list", {
 
 test_that("it procures the correct stagerunner", {
   args <- lapply(seq_len(2),
-    function(.) list(column_transformation(function(x) 2*x), 1))
+    function(.) list(list(column_transformation(function(x) 2*x), NULL), 1))
   sr <- munge(iris, args, stagerunner = TRUE)
   expect_is(sr, 'stageRunner')
   expect_equal(length(sr$stages), 3)
-  tmp <- new.env(); tmp$data <- iris
-  sr$stages[[1]]$fn(tmp)
-  expect_equal(tmp$data[[1]], 2 * iris[[1]])
+  sr$run()
+  expect_equal(sr$context$data[[1]], 4 * iris[[1]])
+  sr$run()
+  expect_equal(sr$context$data[[1]], 4 * iris[[1]])
+})
+
+test_that("it procures a stagerunner with training only if train_only = TRUE", {
+  args <- lapply(seq_len(2),
+    function(.) list(list(column_transformation(function(x) 2*x), NULL), 1))
+  sr <- munge(iris, args, stagerunner = TRUE, train_only = TRUE)
+  expect_identical(sr$context$data, iris)
+  sr$run(1)
+  sr$run(1)
+  expect_identical(sr$context$data[[1]], 4 * iris[[1]],
+    info = "The stagerunner should only run the training step")
 })
 

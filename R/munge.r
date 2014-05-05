@@ -11,6 +11,12 @@
 #'    return the parametrizing stageRunner object (see package stagerunner).
 #'    If a list, one can specify \code{remember = TRUE} to pass to the
 #'    stageRunner initializer.
+#' @param train_only logical. Whether or not to leave the \code{trained}
+#'    parameter on each mungebit to \code{TRUE} or \code{FALSE} accordingly.
+#'    For example, if \code{stagerunner = TRUE} and we are planning to re-use
+#'    the stagerunner for prediction, it makes sense to leave the mungebits
+#'    untrained. (Note that this will prevent one from being able to run the
+#'    predict functions!)
 #' @return data.frame that has had the specified operations applied to it,
 #'    along with an additional property \code{mungepieces} that records
 #'    the history of applied functions. These can be used to reproduce
@@ -37,7 +43,7 @@
 #' # also equivalent to the shortcut: munge(iris, iris2)
 #' stopifnot(iris3[['Sepal.Length']] == iris[['Sepal.Length']] * 3)
 #' }
-munge <- function(dataframe, ..., stagerunner = FALSE) {
+munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
   mungepieces <- list(...)
   if (length(mungepieces) == 0) return(dataframe)
 
@@ -59,15 +65,12 @@ munge <- function(dataframe, ..., stagerunner = FALSE) {
       mungepieces <- mungepieces[[1]]
   }
 
-  mungepieces <- lapply(mungepieces, parse_mungepiece)
+  mungepieces <- lapply(mungepieces, parse_mungepiece,
+                        train_only = !identical(train_only, FALSE))
 
   # order matters, do not parallelize!
-  stages <- lapply(lapply(mungepieces, list), function(piece) {
-    force(piece)
-    function(env) {
-      if (!is.null(name <- names(piece)) && name != "") cat(name, "...\n")
-      piece[[1]]$run(env)
-    }
+  stages <- lapply(mungepieces, function(piece) {
+    force(piece); function(env) piece$run(env)
   })
   stages <- append(stages, list(function(env) {
     # For now, store the mungepieces on the dataframe

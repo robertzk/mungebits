@@ -3,7 +3,7 @@
 \alias{munge}
 \title{General-purpose data munging}
 \usage{
-munge(dataframe, ..., stagerunner = FALSE)
+munge(dataframe, ..., stagerunner = FALSE, train_only = FALSE)
 }
 \arguments{
 \item{dataframe}{a data set to operate on.}
@@ -15,6 +15,13 @@ examples).}
 return the parametrizing stageRunner object (see package stagerunner).
 If a list, one can specify \code{remember = TRUE} to pass to the
 stageRunner initializer.}
+
+\item{train_only}{logical. Whether or not to leave the \code{trained}
+parameter on each mungebit to \code{TRUE} or \code{FALSE} accordingly.
+For example, if \code{stagerunner = TRUE} and we are planning to re-use
+the stagerunner for prediction, it makes sense to leave the mungebits
+untrained. (Note that this will prevent one from being able to run the
+predict functions!)}
 }
 \value{
 data.frame that has had the specified operations applied to it,

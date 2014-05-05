@@ -42,35 +42,56 @@ mungebit <- setRefClass('mungebit',
                 predict_function = 'ANY',
                 arguments_cache = 'list',
                 inputs = 'list',
-                trained = 'logical'),
+                trained = 'logical',
+                enforce_train = 'logical'),
   methods = list(
-    initialize = function(train_fn = function(x) x, predict_fn = train_fn) {
-      train_function <<- inject_inputs(train_fn)
-      predict_function <<- inject_inputs(predict_fn)
+    initialize = function(train_fn = function(x) x, predict_fn = train_fn, enforce_train = TRUE) {
+      train_function <<- train_fn
+      predict_function <<- predict_fn
 
       inputs <<- list()
       trained <<- FALSE
+      enforce_train <<- enforce_train
     },
     
     run = function(mungeplane, ...) {
-      if (!trained) do.call(.self$train, list(mungeplane, ...))
-      else do.call(.self$predict, list(mungeplane, ...))
+      # We cannot use, e.g., .self$train(mungeplane, ...),
+      # because we must force the ... to get evaluated due to
+      # non-standard evaluation in the train and predict methods.
+      do.call(if (!trained) .self$train else .self$predict,
+              list(mungeplane, ...))
       invisible()
     },
     
     predict = function(mungeplane, ...) {
-      if (!is.null(predict_function)) predict_function(mungeplane$data, ...) 
+      if (!is.null(predict_function)) {
+        inject_inputs(predict_function)
+        on.exit(environment(predict_function) <<-
+          parent.env(environment(predict_function)))
+
+        predict_function(mungeplane$data, ...) 
+      }
+      invisible(TRUE)
     },
 
     train = function(mungeplane, ...) {
       if (!is.null(train_function)) {
+        inject_inputs(train_function)
+        on.exit(environment(train_function) <<-
+          parent.env(environment(train_function)))
+
         train_function(mungeplane$data, ...) 
-        if (!is.null(predict_function)) {
-          parent.env(environment(predict_function))$inputs <<-
-            parent.env(environment(train_function))$inputs
-        }
+
+        # TODO: Oh no. :( Sometimes inputs is being set and sometimes
+        # environment(train_function)$inputs is being set--I think this
+        # has to do with changing the environment of the function that's
+        # running. How do we get around this? This seems incredibly messy.
+        inputs <<-
+          if (length(tmp <- environment(train_function)$inputs) > 0) tmp
+          else inputs
       }
-      trained <<- TRUE
+      if (enforce_train) trained <<- TRUE
+      invisible(TRUE)
     }
   )
 )
@@ -82,12 +103,14 @@ is.mungebit <- function(x) inherits(x, 'mungebit')
 #'
 #' @param fn function. The function on which to inject.
 inject_inputs <- function(fn) {
-  if (is.null(fn)) return(NULL)
-  middle_parent <- new.env()
-  middle_parent$inputs <- list()
-  parent.env(middle_parent) <- parent.env(environment(fn))
-  parent.env(environment(fn)) <- middle_parent
-  fn
+  eval.parent(substitute({
+    run_env <- new.env(parent = environment(fn))
+    run_env$inputs <- inputs
+    debug_flag <- isdebugged(fn)
+    environment(fn) <<- run_env
+    # Restore debugging if it was enabled.
+    if (debug_flag) debug(fn)
+  }))
 }
 
 # S3 class...uglier way to do it

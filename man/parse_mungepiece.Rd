@@ -3,7 +3,7 @@
 \alias{parse_mungepiece}
 \title{Translate a list of arguments passed to a mungebit into a mungepiece}
 \usage{
-parse_mungepiece(args)
+parse_mungepiece(args, train_only = FALSE)
 }
 \arguments{
 \item{args}{a list. This can be of the formats
@@ -18,6 +18,13 @@ different parameters for the training and prediction function,
 respectively. The given training and prediction functions are used to
 construct a \code{mungebit}, and the resulting \code{mungebit} and
 the remaining arguments are stored in a \code{mungepiece}.}
+
+\item{train_only}{logical. Whether or not to leave the \code{trained}
+parameter on each mungebit to \code{TRUE} or \code{FALSE} accordingly.
+For example, if \code{stagerunner = TRUE} and we are planning to re-use
+the stagerunner for prediction, it makes sense to leave the mungebits
+untrained. (Note that this will prevent one from being able to run the
+predict functions!)}
 }
 \value{
 the parsed mungepiece
