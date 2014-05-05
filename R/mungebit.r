@@ -54,7 +54,7 @@ mungebit__initialize <- function(train_fn = function(x) x,
 #' it can only run the \code{predict_fn}, otherwise it will
 #' run the \code{train_fn}.
 #'
-#' @alias mungebit__initialize
+#' @aliases mungebit__initialize
 #' @param mungeplane mungeplane. Essentially an environment containing
 #'   a \code{data} variable.
 #' @param ... additional arguments to the mungebit's \code{train_fn} or
@@ -71,7 +71,7 @@ mungebit__run <- function(mungeplane, ...) {
 
 #' Run the predict function on a mungebit.
 #'
-#' @alias mungebit__initialize
+#' @aliases mungebit__initialize
 #' @param mungeplane mungeplane. Essentially an environment containing
 #'   a \code{data} variable.
 #' @param ... additional arguments to the mungebit's \code{predict_fn}.
@@ -89,7 +89,7 @@ mungebit__predict <- function(mungeplane, ...) {
 
 #' Run the train function on a mungebit.
 #'
-#' @alias mungebit__initialize
+#' @aliases mungebit__initialize
 #' @param mungeplane mungeplane. Essentially an environment containing
 #'   a \code{data} variable.
 #' @param ... additional arguments to the mungebit's \code{train_fn}.

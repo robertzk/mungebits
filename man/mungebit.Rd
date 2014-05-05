@@ -2,7 +2,12 @@
 \docType{class}
 \name{mungebit}
 \alias{mungebit}
+\alias{mungebit__initialize}
 \title{Constructor for mungebit class.}
+\usage{
+mungebit__initialize(train_fn = function(x) x, predict_fn = train_fn,
+  enforce_train = TRUE)
+}
 \arguments{
 \item{train_fn}{a function. This specifies the behavior to perform
 on the dataset when preparing for model training. A value of NULL
