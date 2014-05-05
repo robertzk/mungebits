@@ -82,10 +82,10 @@ mungebit <- setRefClass('mungebit',
 
         train_function(mungeplane$data, ...) 
 
-        # TODO: Oh no. :( Sometimes inputs is being set and sometimes run_env$inputs
-        # is being set--I think this has to do with changing the environment of
-        # the function that's running. How do we get around this? This seems
-        # incredibly messy.
+        # TODO: Oh no. :( Sometimes inputs is being set and sometimes
+        # environment(train_function)$inputs is being set--I think this
+        # has to do with changing the environment of the function that's
+        # running. How do we get around this? This seems incredibly messy.
         inputs <<-
           if (length(tmp <- environment(train_function)$inputs) > 0) tmp
           else inputs
