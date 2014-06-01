@@ -54,6 +54,8 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
 
   if (is.data.frame(mungepieces[[1]]))
     mungepieces[[1]] <- attr(mungepieces[[1]], 'mungepieces')
+  else if (is(mungepieces[[1]], 'tundraContainer'))
+    mungepieces[[1]] <- mungepieces[[1]]$munge_procedure
 
   # If mungepieces[[1]] is of the form
   # list(list|mungepiece|function, list|mungepiece|function, ...)
