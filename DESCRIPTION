@@ -1,7 +1,7 @@
 Package: mungebits
 Type: Package
 Title: mungebits (http://github.com/robertzk/mungebits)
-Description: Mungebits is a collection of data preparation functions
+Description: Mungebits is a collection of data preparation functions.
 Version: 0.2.1
 Author: Robert Krzyzanowski <technoguyrob@gmail.com>
 Maintainer: Robert Krzyzanowski <technoguyrob@gmail.com>
