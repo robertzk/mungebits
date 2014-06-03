@@ -56,6 +56,7 @@ mungepiece <- setRefClass('mungepiece',
 
 is.mungepiece <- function(x) inherits(x, 'mungepiece')
 
+#' @export
 list_merge <- function(list1, list2) {
   for (i in seq_along(list2)) {
     name <- names(list2)[i]

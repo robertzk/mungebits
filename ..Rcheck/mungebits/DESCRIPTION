@@ -7,14 +7,10 @@ Author: Robert Krzyzanowski <technoguyrob@gmail.com>
 Maintainer: Robert Krzyzanowski <technoguyrob@gmail.com>
 Authors@R: c(person("Robert", "Krzyzanowski",
     email = "technoguyrob@gmail.com", role = c("aut", "cre")))
-Depends:
-    R (>= 3.0.1)
+Depends: R (>= 3.0.1)
 License: MIT
 LazyData: true
-Imports:
-    stagerunner
-Suggests:
-    testthat,
-    knitr,
-    microbenchmark
+Imports: stagerunner
+Suggests: testthat, knitr, microbenchmark
 Roxygen: list(wrap = FALSE)
+Built: R 3.0.2; ; 2014-06-03 00:38:10 UTC; unix

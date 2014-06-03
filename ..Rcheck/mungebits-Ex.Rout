@@ -1,0 +1,194 @@
+
+R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin10.8.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "mungebits"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('mungebits')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("list_merge")
+> ### * list_merge
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: list_merge
+> ### Title: Merge two lists and overwrite latter entries with former entries
+> ###   if names are the same.
+> ### Aliases: list_merge
+> 
+> ### ** Examples
+> 
+> stopifnot(identical(list_merge(list(a = 1, b = 2), list(b = 3, c = 4)),
++                     list(a = 1, b = 3, c = 4)))
+> stopifnot(identical(list_merge(NULL, list(a = 1)), list(a = 1)))
+> 
+> 
+> 
+> cleanEx()
+> nameEx("munge")
+> ### * munge
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: munge
+> ### Title: General-purpose data munging
+> ### Aliases: munge
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D iris2 <- munge(iris,
+> ##D   list(column_transformation(function(x) 2 * x), 'Sepal.Length'))
+> ##D stopifnot(iris2[['Sepal.Length']] == iris[['Sepal.Length']] * 2)
+> ##D 
+> ##D iris2 <- munge(iris,
+> ##D    # train function & predict function
+> ##D    list(c(column_transformation(function(x) 2 * x),
+> ##D         column_transformation(function(x) 3 * x)),
+> ##D    # arguments to pass to transformation, i.e. column names in this case
+> ##D    'Sepal.Length'))
+> ##D stopifnot(iris2[['Sepal.Length']] == iris[['Sepal.Length']] * 2)
+> ##D iris3 <- munge(iris, attr(iris2, 'mungepieces'))
+> ##D # used transformations ("mungepieces") stored on iris2 and apply to iris3.
+> ##D # They will remember that they've been trained already and run the
+> ##D # prediction routine instead of the training routine. Note the above is
+> ##D # also equivalent to the shortcut: munge(iris, iris2)
+> ##D stopifnot(iris3[['Sepal.Length']] == iris[['Sepal.Length']] * 3)
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("mungebit")
+> ### * mungebit
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: mungebit
+> ### Title: Constructor for mungebit class.
+> ### Aliases: mungebit mungebit__initialize
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D mp <- mungeplane(iris)
+> ##D mb <- mungebit(column_transformation(function(col, scale = NULL) {
+> ##D   if ('scale' %in% names(inputs))
+> ##D     cat("Column scaled by ", inputs$scale, "\n")
+> ##D   else inputs$scale <<- scale
+> ##D   col * inputs$scale
+> ##D }))
+> ##D mb$run(mp, 'Sepal.Length', 2)
+> ##D # mp$data now contains a copy of iris w/ the Sepal.Length column doubled
+> ##D head(mp$data[[1]] / iris[[1]])
+> ##D # > [1] 2 2 2 2 2 2
+> ##D mb$run(mp, 'Sepal.Length')
+> ##D # > Column scaled by 2
+> ##D head(mp$data[[1]] / iris[[1]])
+> ##D # > [1] 4 4 4 4 4 4
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("mungepiece")
+> ### * mungepiece
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: mungepiece
+> ### Title: Mungepieces are mungebits that have had their arguments cached
+> ###   (with the exception of the first, the data.frame).
+> ### Aliases: mungepiece
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D doubler <- mungebit(column_transformation(function(x) x * 2))
+> ##D cols <- c('Sepal.Length', 'Petal.Length')
+> ##D mp <- mungepiece(doubler, list(cols))
+> ##D iris2 <- mungeplane(iris)
+> ##D mp$run(iris2)
+> ##D stopifnot(iris2$data[cols] == 2 * iris[cols])
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("mungeplane")
+> ### * mungeplane
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: mungeplane
+> ### Title: Mungeplane are reference classes wrappers around a dataframe.
+> ### Aliases: mungeplane
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D mp <- mungeplane(iris)
+> ##D (function(plane) plane$data[[1]] <- 2 * plane$data[[1]])(mp)
+> ##D stopifnot(all.equal(mp$data[[1]], 2 * iris[[1]]))
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("parse_mungepiece")
+> ### * parse_mungepiece
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: parse_mungepiece
+> ### Title: Translate a list of arguments passed to a mungebit into a
+> ###   mungepiece
+> ### Aliases: parse_mungepiece
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D doubler <- column_transformation(function(x) x * 2)
+> ##D mp <- parse_mungepiece(list(doubler, 'Sepal.Length'))
+> ##D iris2 <- mungeplane(iris)
+> ##D mp$run(iris2)
+> ##D stopifnot(all.equal(iris2$data[[1]], 2 * iris[[1]]))
+> ##D 
+> ##D # TODO: Way more examples, unit tests
+> ##D 
+> ## End(Not run)
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.165 0.007 0.172 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

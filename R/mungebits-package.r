@@ -2,5 +2,6 @@
 #' munger library.
 #'
 #' @name mungebits
+#' @import stagerunner
 #' @docType package
 NULL

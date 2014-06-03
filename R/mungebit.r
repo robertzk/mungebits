@@ -13,10 +13,8 @@
 #' @param predict_fn a function. This specifies the behavior to perform
 #'    on the dataset when preparing for model prediction. A value of NULL
 #'    specifies that there should be no prediction step.
-#' @param inputs a list. Used for maintaining meta-data between
-#'    training and prediction runs.
-#' @param trained a logical. Used for determining whether or not the
-#'    mungebit has been run on a dataset already.
+#' @param enforce_train logical. Whether or not to flitch the trained flag
+#'    during runtime.
 #' @seealso \code{\link{mungepiece}}
 #' @examples
 #' \dontrun{
@@ -54,7 +52,6 @@ mungebit__initialize <- function(train_fn = function(x) x,
 #' it can only run the \code{predict_fn}, otherwise it will
 #' run the \code{train_fn}.
 #'
-#' @aliases mungebit__initialize
 #' @param mungeplane mungeplane. Essentially an environment containing
 #'   a \code{data} variable.
 #' @param ... additional arguments to the mungebit's \code{train_fn} or
@@ -71,7 +68,6 @@ mungebit__run <- function(mungeplane, ...) {
 
 #' Run the predict function on a mungebit.
 #'
-#' @aliases mungebit__initialize
 #' @param mungeplane mungeplane. Essentially an environment containing
 #'   a \code{data} variable.
 #' @param ... additional arguments to the mungebit's \code{predict_fn}.
@@ -89,7 +85,6 @@ mungebit__predict <- function(mungeplane, ...) {
 
 #' Run the train function on a mungebit.
 #'
-#' @aliases mungebit__initialize
 #' @param mungeplane mungeplane. Essentially an environment containing
 #'   a \code{data} variable.
 #' @param ... additional arguments to the mungebit's \code{train_fn}.

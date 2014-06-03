@@ -17,11 +17,8 @@ specifies that there should be no training step.}
 on the dataset when preparing for model prediction. A value of NULL
 specifies that there should be no prediction step.}
 
-\item{inputs}{a list. Used for maintaining meta-data between
-training and prediction runs.}
-
-\item{trained}{a logical. Used for determining whether or not the
-mungebit has been run on a dataset already.}
+\item{enforce_train}{logical. Whether or not to flitch the trained flag
+during runtime.}
 }
 \description{
 Mungebits are atomic data transformations of a data.frame that,

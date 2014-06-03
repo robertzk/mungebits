@@ -1,0 +1,39 @@
+
+R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin10.8.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(testthat)
+> test_package("mungebits")
+inject_inputs : ..
+list_merge : ....
+munge function : Loading required package: mungebitsTransformations
+Loading required package: Rcpp
+1..............
+mungebit reference class : ............
+mungepiece reference class : ....
+mungeplane : ..
+parse_mungepiece function : ......
+
+
+1. Failure: it correctly does nothing if no mungepieces are passed -------------
+munge(iris) not equal to iris[, 1]
+Modes: numeric, list
+Lengths: 150, 5
+names for current but not for target
+Attributes: < target is NULL, current is list >
+target is numeric, current is data.frame
+Error: Test failures
+Execution halted
