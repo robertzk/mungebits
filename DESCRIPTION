@@ -13,4 +13,7 @@ License: MIT
 LazyData: true
 Imports:
     stagerunner
+Suggests:
+    knitr,
+    microbenchmark
 Roxygen: list(wrap = FALSE)
