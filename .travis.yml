@@ -13,7 +13,7 @@ before_install:
 install:
   - ./travis-tool.sh install_deps
   - ./travis-tool.sh install_r microbenchmark knitr # testthat
-  - ./travis-tool.sh install_github robertzk/stagerunner
+  - ./travis-tool.sh install_github robertzk/stagerunner robertzk/mungebitsTransformations
 script: ./travis-tool.sh run_tests
 
 after_failure:
