@@ -1,0 +1,2 @@
+- Fix Travis build by replacing references to mungebitsTransformations,
+  since this is causing circular dependencies
