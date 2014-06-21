@@ -10,6 +10,7 @@
 #'    optimization procedures in mungebit operations that temporarily remove
 #'    the \code{data.frame} class to use built-in C replacement functions.
 #' @return mungeplane an environment with a "data" object of class "mungeplane"
+#' @export
 #' @examples
 #' \dontrun{
 #' mp <- mungeplane(iris)
