@@ -1,5 +1,4 @@
 context("mungepiece reference class")
-require(mungebitsTransformations)
 
 test_that("it correctly initializes without prediction arguments", {
   mb <- mungebit(function(x) x)

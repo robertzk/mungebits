@@ -1,8 +1,7 @@
 context("munge function")
-require(mungebitsTransformations)
 
 test_that("it correctly does nothing if no mungepieces are passed", {
-  expect_equal(munge(iris), iris)
+  expect_equal(munge(iris), iris[,])
 })
 
 test_that("it correctly adds to the mungepieces list", {

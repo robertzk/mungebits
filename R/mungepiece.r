@@ -1,3 +1,4 @@
+setClassUnion('listOrNull', c('list', 'NULL'))
 #' Mungepieces are mungebits that have had their arguments cached
 #' (with the exception of the first, the data.frame).
 #'
@@ -17,6 +18,7 @@
 #'    the first time using \code{mungebit$run} or \code{mungebit$train}.
 #' @param predict_args a list. These will be passed when a mungebit is run
 #'    subsequent times using \code{mungebit$run} or \code{mungebit$predict}.
+#' @export
 #' @examples
 #' \dontrun{
 #' doubler <- mungebit(column_transformation(function(x) x * 2))
@@ -26,7 +28,6 @@
 #' mp$run(iris2)
 #' stopifnot(iris2$data[cols] == 2 * iris[cols])
 #' }
-setClassUnion('listOrNull', c('list', 'NULL'))
 mungepiece <- setRefClass('mungepiece',
   fields = list(bit = 'mungebit',
                 train_args = 'list',
@@ -56,6 +57,7 @@ mungepiece <- setRefClass('mungepiece',
 
 is.mungepiece <- function(x) inherits(x, 'mungepiece')
 
+#' @export
 list_merge <- function(list1, list2) {
   for (i in seq_along(list2)) {
     name <- names(list2)[i]

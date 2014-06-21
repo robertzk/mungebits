@@ -1,17 +1,20 @@
 Package: mungebits
 Type: Package
-Title: mungebits
+Title: mungebits (http://github.com/robertzk/mungebits)
 Description: Mungebits is a collection of data preparation functions
-Version: 0.2.1
+Version: 0.3.0
+Author: Robert Krzyzanowski <technoguyrob@gmail.com>
+Maintainer: Robert Krzyzanowski <technoguyrob@gmail.com>
 Authors@R: c(person("Robert", "Krzyzanowski",
     email = "technoguyrob@gmail.com", role = c("aut", "cre")))
 Depends:
     R (>= 3.0.1)
 License: MIT
 LazyData: true
+Imports:
+    stagerunner
 Suggests:
-    testthat,
     knitr,
     microbenchmark,
-    stagerunner
+    testthat
 Roxygen: list(wrap = FALSE)

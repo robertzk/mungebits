@@ -6,17 +6,15 @@
 #' include dropping variables, mapping values, discretization, etc.
 #'
 #' @docType class
-#' @name mungebit
-#' @param train_fn a function. This specifies the behavior to perform
+#' @rdname mungebit
+#' @param train_fn function. This specifies the behavior to perform
 #'    on the dataset when preparing for model training. A value of NULL
 #'    specifies that there should be no training step.
-#' @param predict_fn a function. This specifies the behavior to perform
+#' @param predict_fn function. This specifies the behavior to perform
 #'    on the dataset when preparing for model prediction. A value of NULL
 #'    specifies that there should be no prediction step.
-#' @param inputs a list. Used for maintaining meta-data between
-#'    training and prediction runs.
-#' @param trained a logical. Used for determining whether or not the
-#'    mungebit has been run on a dataset already.
+#' @param enforce_train logical. Whether or not to flitch the trained flag
+#'    during runtime.
 #' @seealso \code{\link{mungepiece}}
 #' @examples
 #' \dontrun{
@@ -54,7 +52,7 @@ mungebit__initialize <- function(train_fn = function(x) x,
 #' it can only run the \code{predict_fn}, otherwise it will
 #' run the \code{train_fn}.
 #'
-#' @aliases mungebit__initialize
+#' @rdname mungebit
 #' @param mungeplane mungeplane. Essentially an environment containing
 #'   a \code{data} variable.
 #' @param ... additional arguments to the mungebit's \code{train_fn} or
@@ -71,10 +69,7 @@ mungebit__run <- function(mungeplane, ...) {
 
 #' Run the predict function on a mungebit.
 #'
-#' @aliases mungebit__initialize
-#' @param mungeplane mungeplane. Essentially an environment containing
-#'   a \code{data} variable.
-#' @param ... additional arguments to the mungebit's \code{predict_fn}.
+#' @rdname mungebit
 #' @seealso \code{\link{mungebit__run}}, \code{\link{mungebit__initialize}}
 mungebit__predict <- function(mungeplane, ...) {
   if (!is.null(predict_function)) {
@@ -89,10 +84,7 @@ mungebit__predict <- function(mungeplane, ...) {
 
 #' Run the train function on a mungebit.
 #'
-#' @aliases mungebit__initialize
-#' @param mungeplane mungeplane. Essentially an environment containing
-#'   a \code{data} variable.
-#' @param ... additional arguments to the mungebit's \code{train_fn}.
+#' @rdname mungebit
 #' @seealso \code{\link{mungebit__run}}, \code{\link{mungebit__initialize}}
 mungebit__train <- function(mungeplane, ...) {
   if (!is.null(train_function)) {
@@ -114,6 +106,10 @@ mungebit__train <- function(mungeplane, ...) {
   invisible(TRUE)
 }
 
+#' This class is intended to abstract the idea of separate data preparation
+#' during training versus prediction.
+#'
+#' @export
 mungebit <- setRefClass('mungebit',
   fields = list(train_function = 'ANY',
                 predict_function = 'ANY',

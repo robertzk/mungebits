@@ -1,5 +1,4 @@
 context("mungebit reference class")
-require(mungebitsTransformations)
 
 test_that("it correctly sets trained flag after one run", {
   mb <- mungebit(column_transformation(function(x) x))
