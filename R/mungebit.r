@@ -13,8 +13,8 @@
 #' @param predict_fn function. This specifies the behavior to perform
 #'    on the dataset when preparing for model prediction. A value of NULL
 #'    specifies that there should be no prediction step.
-#' @param enforce_train logical. Ensure that mungebits get their
-#'    \code{trained} flag flipped when training.
+#' @param enforce_train logical. Whether or not to flitch the trained flag
+#'    during runtime.
 #' @seealso \code{\link{mungepiece}}
 #' @examples
 #' \dontrun{

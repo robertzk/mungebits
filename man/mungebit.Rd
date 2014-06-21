@@ -25,8 +25,8 @@ specifies that there should be no training step.}
 on the dataset when preparing for model prediction. A value of NULL
 specifies that there should be no prediction step.}
 
-\item{enforce_train}{logical. Ensure that mungebits get their
-\code{trained} flag flipped when training.}
+\item{enforce_train}{logical. Whether or not to flitch the trained flag
+during runtime.}
 
 \item{mungeplane}{mungeplane. Essentially an environment containing
 a \code{data} variable.}
