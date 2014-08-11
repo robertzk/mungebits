@@ -68,3 +68,18 @@ test_that("it correctly uses the train_only argument", {
     info = "The mungepiece should not run prediction")
 })
 
+test_that("it correctly parses a mungebit", {
+  mb <- mungebit(doubler <- column_transformation(function(x) x * 2))
+  mp <- parse_mungepiece(list(doubler))
+  iris2 <- mungeplane(iris)
+  mp$run(iris2, 1)
+  expect_equal(iris2$data[[1]], 2 * iris[[1]])
+  expect_equal(iris2$data[[2]], iris[[2]])
+
+  mp <- parse_mungepiece(list(doubler, 1))
+  iris2 <- mungeplane(iris)
+  mp$run(iris2)
+  expect_equal(iris2$data[[1]], 2 * iris[[1]])
+  expect_equal(iris2$data[[2]], iris[[2]])
+})
+
