@@ -20,11 +20,26 @@
 standard_column_format <- function(cols, dataframe) {
   if (missing(dataframe)) stop('No dataframe provided')
   missingcols <- missing(cols)
-  eval(substitute(
-   if (missingcols) colnames(dataframe)
-   else if (is.function(cols)) colnames(dataframe)[vapply(dataframe, cols, logical(1))]
-   else if (is.character(cols)) force(cols) 
-   else colnames(dataframe)[cols]
-  ), envir = parent.frame())
+  if (missingcols) colnames(dataframe)
+  else {
+    eval.parent(substitute({
+      process <- function(xcols) {
+        Reduce(intersect, lapply(xcols, function(subcols) {
+          if (is.function(subcols)) {
+            # Much faster than lapply here.
+            colnames(dataframe)[(function() {
+              ix <- logical(length(dataframe))
+              for (i in seq_along(dataframe)) ix[i] <- subcols(.subset2(dataframe, i))
+              ix
+            })()]
+          }
+          else if (is.character(subcols)) force(subcols) 
+          else if (is.list(subcols)) process(subcols)
+          else colnames(dataframe)[subcols]
+        }))
+      }
+      process(if (is.list(cols)) cols else list(cols))
+    }))
+  }
 }
 
