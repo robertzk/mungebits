@@ -37,7 +37,8 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
     # During prediction, always use same column names as during training
     # TODO: Clean this up
     force(input_cols)
-    standard_cols <- standard_column_format(input_cols, dataframe)
+    standard_cols <- intersect(colnames(dataframe),
+                               standard_column_format(input_cols, dataframe))
 
     invisible(eval(substitute({
       cols <-
