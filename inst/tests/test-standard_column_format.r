@@ -22,3 +22,14 @@ test_that('it correctly parses function input', {
   expect_equal(standard_column_format(mean_fn, iris),
                colnames(iris)[vapply(iris, mean_fn, logical(1))])
 })
+
+test_that('it correctly parses list input', {
+  cols <- standard_column_format(list(1:2, 'Sepal.Width'), iris)
+  expect_equal(cols, colnames(iris)[2])
+})
+
+test_that('it correctly parses nested list input', {
+  cols <- standard_column_format(list(5, 'Species', list(is.factor)), iris)
+  expect_equal(cols, colnames(iris)[5])
+})
+
