@@ -8,7 +8,9 @@
 #' @param cols a vector or function. If logical / numeric / character vector,
 #'    it will attempt to find those columns matching these values. If \code{cols}
 #'    is a function, it will apply this function to each column of the dataframe
-#'    and return the names of columns for which it was \code{TRUE}.
+#'    and return the names of columns for which it was \code{TRUE}. Additionally,
+#'    \code{cols} can be a list of any combination of the above, which will 
+#'    require all the conditions to be met.
 #' @param dataframe a reference dataframe. Necessary for computing the
 #'    column names if a numeric or logical vector is specified for \code{cols}.
 #' @export
@@ -16,6 +18,7 @@
 #' standard_column_format(c(1,5), iris)  # c('Sepal.Length', 'Species')
 #' standard_column_format(c(TRUE,FALSE,FALSE,FALSE,TRUE), iris)  # c('Sepal.Length', 'Species')
 #' standard_column_format('Sepal.Length', iris)  # 'Sepal.Length'
+#' standard_column_format(list(is.numeric, c(1,5)), iris)  # 'Sepal.Length'
 
 standard_column_format <- function(cols, dataframe) {
   if (missing(dataframe)) stop('No dataframe provided')
