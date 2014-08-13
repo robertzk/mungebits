@@ -45,6 +45,8 @@ parse_mungepiece <- function(args, train_only = FALSE) {
     return(mungepiece(mb, args[-1]))
   }
   stopifnot(is.list(args))  
+  if (is.list(args) && length(args) == 1 && is.mungepiece(args[[1]]))
+    return(args[[1]])
 
   if (is.list(args[[1]]) && length(args) > 1 && is.list(args[[2]]) &&
       length(args[[1]]) > 0 && is.function(args[[1]][[1]]) &&

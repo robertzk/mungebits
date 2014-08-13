@@ -83,3 +83,7 @@ test_that("it correctly parses a mungebit", {
   expect_equal(iris2$data[[2]], iris[[2]])
 })
 
+test_that("it correctly parses a mungepiece", {
+  mp <- mungepiece(mungebit(identity))
+  expect_identical(parse_mungepiece(list(mp)), mp)
+})
