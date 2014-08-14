@@ -81,6 +81,7 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
           inputs <- if (exists('inputs') &&
                         column_name %in% names(inputs)) inputs[[column_name]]
                     else NULL
+          trained <- exists('trained') # TODO: (RK) Be more careful with this
           debug_flag <- isdebugged(`*tmp.fn.left.by.mungebits.library*`)
           # Ensure transformation has access to "inputs"
           environment(`*tmp.fn.left.by.mungebits.library*`) <- environment()
