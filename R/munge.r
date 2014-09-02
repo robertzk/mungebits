@@ -47,10 +47,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
   mungepieces <- list(...)
   if (length(mungepieces) == 0) return(dataframe)
 
-  old_mungepieces <-
-    attr(if (is.mungeplane(dataframe)) dataframe$data else dataframe,
-         'mungepieces', exact = TRUE)
-  plane <- if (is.mungeplane(dataframe)) dataframe else mungeplane(dataframe)
+  plane <- if (is.environment(dataframe)) dataframe else mungeplane(dataframe)
 
   if (is.data.frame(mungepieces[[1]]))
     mungepieces[[1]] <- attr(mungepieces[[1]], 'mungepieces')
@@ -77,7 +74,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
   stages <- append(stages, list(function(env) {
     # For now, store the mungepieces on the dataframe
     if (length(mungepieces) > 0)
-      attr(env$data, 'mungepieces') <- append(old_mungepieces, mungepieces)
+      attr(env$data, 'mungepieces') <- append(attr(env$data, 'mungepieces'), mungepieces)
   }))
   names(stages)[length(stages)] <- "(Internal) Store munge procedure on dataframe"
 
