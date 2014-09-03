@@ -24,3 +24,9 @@ list_merge <- function(list1, list2) {
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
+#' @export
+except <- function(x) {
+  class(x) <- c('except', class(x))
+  x
+}
+

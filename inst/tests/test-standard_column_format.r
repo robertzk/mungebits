@@ -33,3 +33,25 @@ test_that('it correctly parses nested list input', {
   expect_equal(cols, colnames(iris)[5])
 })
 
+test_that('it should be able to use except correctly with a character', {
+  cols <- standard_column_format(except('Sepal.Length'), iris)
+  expect_equal(cols, colnames(iris)[-1])
+})
+
+test_that('it should be able to use except correctly with a function', {
+  cols <- standard_column_format(except(is.factor), iris)
+  expect_equal(cols, colnames(iris)[-5])
+})
+
+test_that('it should be able to use except correctly with an integer', {
+  cols <- standard_column_format(except(1), iris)
+  expect_equal(cols, colnames(iris)[-1])
+  cols <- standard_column_format(except(-1), iris)
+  expect_equal(cols, colnames(iris)[1])
+})
+
+test_that('it should be able to use except correctly with a list', {
+  cols <- standard_column_format(except(list(1:2, 'Sepal.Width')), iris)
+  expect_equal(cols, colnames(iris)[-2])
+})
+
