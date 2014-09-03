@@ -19,13 +19,14 @@
 #' standard_column_format(c(TRUE,FALSE,FALSE,FALSE,TRUE), iris)  # c('Sepal.Length', 'Species')
 #' standard_column_format('Sepal.Length', iris)  # 'Sepal.Length'
 #' standard_column_format(list(is.numeric, c(1,5)), iris)  # 'Sepal.Length'
+#' # TODO: (RK) Explain except()
 
 standard_column_format <- function(cols, dataframe) {
   if (missing(dataframe)) stop('No dataframe provided')
   missingcols <- missing(cols)
   if (missingcols) colnames(dataframe)
   else {
-    eval.parent(substitute({
+    out <- eval.parent(substitute({
       process <- function(xcols) {
         Reduce(intersect, lapply(xcols, function(subcols) {
           if (is.function(subcols)) {
@@ -43,6 +44,9 @@ standard_column_format <- function(cols, dataframe) {
       }
       process(if (is.list(cols)) cols else list(cols))
     }))
+
+    if (is(cols, 'except')) setdiff(colnames(dataframe), out)
+    else out
   }
 }
 
