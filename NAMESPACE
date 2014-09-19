@@ -3,6 +3,7 @@
 S3method(print,transformation)
 export(column_transformation)
 export(except)
+export(is.mungebit)
 export(is.transformation)
 export(list_merge)
 export(multi_column_transformation)

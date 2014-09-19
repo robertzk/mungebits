@@ -124,6 +124,7 @@ mungebit <- setRefClass('mungebit',
   )
 )
 
+#' @export
 is.mungebit <- function(x) inherits(x, 'mungebit')
 
 #' Inject a parent environment that has only an inputs key so that
