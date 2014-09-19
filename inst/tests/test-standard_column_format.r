@@ -55,3 +55,8 @@ test_that('it should be able to use except correctly with a list', {
   expect_equal(cols, colnames(iris)[-2])
 })
 
+test_that('it should be able to use an AND condition with except', {
+  cols <- standard_column_format(list(except('Sepal.Width'), ls(iris)), iris)
+  expect_equal(cols, colnames(iris)[-2])
+})
+

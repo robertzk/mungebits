@@ -26,10 +26,12 @@ standard_column_format <- function(cols, dataframe) {
   missingcols <- missing(cols)
   if (missingcols) colnames(dataframe)
   else {
-    out <- eval.parent(substitute({
+    eval.parent(substitute({
       process <- function(xcols) {
         Reduce(intersect, lapply(xcols, function(subcols) {
-          if (is.function(subcols)) {
+          if (is(subcols, 'except')) {
+            setdiff(colnames(dataframe), process(unexcept(subcols)))
+          } else if (is.function(subcols)) {
             # Much faster than lapply here.
             colnames(dataframe)[(function() {
               ix <- logical(length(dataframe))
@@ -42,11 +44,9 @@ standard_column_format <- function(cols, dataframe) {
           else colnames(dataframe)[subcols]
         }))
       }
-      process(if (is.list(cols)) cols else list(cols))
+      if (is(cols, 'except')) setdiff(colnames(dataframe), process(list(unexcept(cols))))
+      else process(if (is.list(cols)) cols else list(cols))
     }))
-
-    if (is(cols, 'except')) setdiff(colnames(dataframe), out)
-    else out
   }
 }
 
