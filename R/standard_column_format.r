@@ -20,7 +20,6 @@
 #' standard_column_format('Sepal.Length', iris)  # 'Sepal.Length'
 #' standard_column_format(list(is.numeric, c(1,5)), iris)  # 'Sepal.Length'
 #' # TODO: (RK) Explain except()
-
 standard_column_format <- function(cols, dataframe) {
   if (missing(dataframe)) stop('No dataframe provided')
   missingcols <- missing(cols)
