@@ -80,7 +80,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
 
   if (!missing(stagerunner) && !identical(stagerunner, FALSE)) require(stagerunner)
   remember <- if ('remember' %in% names(stagerunner)) stagerunner$remember else FALSE
-  runner <- stageRunner$new(as(plane, 'environment'), stages, remember = remember)
+  runner <- stageRunner$new(as.environment(plane), stages, remember = remember)
 
   if (!missing(stagerunner) && !identical(stagerunner, FALSE)) runner
   else {
