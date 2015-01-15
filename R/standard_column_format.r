@@ -29,7 +29,9 @@ standard_column_format <- function(cols, dataframe) {
       process <- function(xcols) {
         Reduce(intersect, lapply(xcols, function(subcols) {
           if (is(subcols, 'except')) {
-            setdiff(colnames(dataframe), process(unexcept(subcols)))
+            unexcepted <- unexcept(subcols)
+            if (!is.list(unexcepted)) unexcepted <- list(unexcepted)
+            setdiff(colnames(dataframe), process(unexcepted))
           } else if (is.function(subcols)) {
             # Much faster than lapply here.
             colnames(dataframe)[(function() {

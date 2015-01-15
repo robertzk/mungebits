@@ -66,8 +66,7 @@ test_that('correctly replaces NA', {
   expect_equal(unname(unlist(iris2[1, cols])), rep(replace_val, length(cols)),
     info = paste(
       "multi_column_transformation",
-      testthat:::colourise("na_replacer", "blue"),
-      "must replace NAs in first row w/", replace_val))
+      "na_replacer must replace NAs in first row w/", replace_val))
 })
 
 test_that('correctly transforms using numeric column indices', {
@@ -152,14 +151,11 @@ test_that('it doubles a column no more than 5x as slow as a raw operation', {
   expect_true(multi_column_transformation_runtime <
               3.5 * apply_raw_function_runtime,
     paste0("Execution of ",
-     testthat:::colourise('multi_column_transformation', "blue"),
-     " took too long: \nFormer took ",
-     testthat:::colourise(paste0(multi_column_transformation_runtime, "ms"), "red"),
+     "multi_column_transformation took too long: \nFormer took ",
+     paste0(multi_column_transformation_runtime, "ms"),
      " but latter took ",
-     testthat:::colourise(paste0(apply_raw_function_runtime, "ms"), "red"), ".\n",
+     paste0(apply_raw_function_runtime, "ms"), ".\n",
      "You need to make sure the code for multi_column_transformation\n",
-     "stays efficient relative to ",
-     testthat:::colourise('raw_double', 'blue'),
-     " (see code for this unit test)"))
+     "stays efficient relative to raw_double (see code for this unit test)"))
 })
 
