@@ -69,7 +69,9 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
 
   # order matters, do not parallelize!
   stages <- lapply(mungepieces, function(piece) {
-    force(piece); function(env) piece$run(env)
+    force(piece);
+    if (is(piece, 'stageRunner') || is.function(piece)) { piece }
+    else { function(env) piece$run(env) }
   })
   stages <- append(stages, list(function(env) {
     # For now, store the mungepieces on the dataframe
