@@ -60,7 +60,10 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
   # munge(dataframe, list(...)) or munge(dataframe, ...)
   if (length(mungepieces) == 1 && is.list(mungepieces[[1]]) &&
       all(unlist(lapply(mungepieces[[1]],
-        function(x) is.mungepiece(x) || is.mungebit(x) || is.list(x) || is.function(x))))) {
+        function(x) {
+          is.mungepiece(x) || is.mungebit(x) ||
+          is.list(x) || is.function(x) || 
+          is(x, 'stageRunner'))))) {
       mungepieces <- mungepieces[[1]]
   }
 

@@ -38,6 +38,7 @@
 #' }
 parse_mungepiece <- function(args, train_only = FALSE) {
   if (is.mungepiece(args)) return(args)
+  if (is(args, 'stageRunner')) return(args)
   if (is.mungebit(args) || is.function(args)) args <- list(args)
   if (is.mungebit(args[[1]])) {
     mb <- args[[1]]
