@@ -63,7 +63,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
         function(x) {
           is.mungepiece(x) || is.mungebit(x) ||
           is.list(x) || is.function(x) || 
-          is(x, 'stageRunner'))))) {
+          is(x, 'stageRunner') })))) {
       mungepieces <- mungepieces[[1]]
   }
 
