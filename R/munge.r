@@ -83,7 +83,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
     # TODO: (RK) VERY URGENT BUGFIX NEEDED: Correctly sort the mungepieces when using
     # nested runners.
 
-    atomic_mungepieces <- Filter(function(x) { is(x, "mungepiece") }, atomic_mungepieces)                                
+    atomic_mungepieces <- Filter(function(x) { is(x, "mungepiece") }, mungepieces)
     if (length(atomic_mungepieces) > 0) {
       attr(env$data, 'mungepieces') <-
         append(attr(env$data, 'mungepieces'), atomic_mungepieces)
