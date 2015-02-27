@@ -76,10 +76,18 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
     if (is(piece, 'stageRunner') || is.function(piece)) { piece }
     else { function(env) piece$run(env) }
   })
+
   stages <- append(stages, list(function(env) {
     # For now, store the mungepieces on the dataframe
-    if (length(mungepieces) > 0)
-      attr(env$data, 'mungepieces') <- append(attr(env$data, 'mungepieces'), mungepieces)
+    # When attaching mungepieces, only append to the dataframe the things that are actually mungepieces.
+    # TODO: (RK) VERY URGENT BUGFIX NEEDED: Correctly sort the mungepieces when using
+    # nested runners.
+
+    atomic_mungepieces <- Filter(function(x) { is(x, "mungepiece") }, atomic_mungepieces)                                
+    if (length(atomic_mungepieces) > 0) {
+      attr(env$data, 'mungepieces') <-
+        append(attr(env$data, 'mungepieces'), atomic_mungepieces)
+    }
   }))
   names(stages)[length(stages)] <- "(Internal) Store munge procedure on dataframe"
 
