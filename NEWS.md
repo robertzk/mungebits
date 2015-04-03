@@ -1,3 +1,7 @@
+# Version 0.4.0
+
+  * `mungebit` and `mungepiece` are now [R6 classes](http://github.com/wch/R6).
+    
 # Version 0.3.0
 
   * The mungebitsTransformations package was renamed to syberiaMungebits,
