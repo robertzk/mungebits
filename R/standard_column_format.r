@@ -26,6 +26,11 @@ standard_column_format <- function(cols, dataframe) {
   if (missingcols) colnames(dataframe)
   else {
     eval.parent(substitute({
+      unexcept <- function(x) {
+        class(x) <- setdiff(class(x), 'except')
+        x
+      }
+
       process <- function(xcols) {
         Reduce(intersect, lapply(xcols, function(subcols) {
           if (is(subcols, 'except')) {
@@ -45,6 +50,7 @@ standard_column_format <- function(cols, dataframe) {
           else colnames(dataframe)[subcols]
         }))
       }
+
       if (is(cols, 'except')) setdiff(colnames(dataframe), process(list(unexcept(cols))))
       else process(if (is.list(cols)) cols else list(cols))
     }))

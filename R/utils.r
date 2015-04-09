@@ -30,8 +30,3 @@ except <- function(x) {
   x
 }
 
-unexcept <- function(x) {
-  class(x) <- setdiff(class(x), 'except')
-  x
-}
-
