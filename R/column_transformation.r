@@ -58,6 +58,7 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
 
       if (!mutating) {
         debug_flag <- isdebugged(`*tmp.fn.left.by.mungebits.library*`)
+        prev_environment <- environment(`*tmp.fn.left.by.mungebits.library*`)
         environment(`*tmp.fn.left.by.mungebits.library*`) <- environment()
         if (debug_flag) debug(`*tmp.fn.left.by.mungebits.library*`)
         if (named)
@@ -67,6 +68,8 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
         else 
           dataframe[cols] <- lapply(dataframe[cols], 
             `*tmp.fn.left.by.mungebits.library*`, ...)
+
+        environment(`*tmp.fn.left.by.mungebits.library*`) <- prev_environment
       } else {
         # We must now be surgically precise. The transformation function
         # is attempting to store values in "inputs" using inputs <<- ...
@@ -87,7 +90,9 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
           trained <- exists('trained') # TODO: (RK) Be more careful with this
           debug_flag <- isdebugged(`*tmp.fn.left.by.mungebits.library*`)
           # Ensure transformation has access to "inputs"
+          prev_environment <- environment(`*tmp.fn.left.by.mungebits.library*`)
           environment(`*tmp.fn.left.by.mungebits.library*`) <- environment()
+
           if (debug_flag) debug(`*tmp.fn.left.by.mungebits.library*`)
           column <- `*tmp.fn.left.by.mungebits.library*`(
             if (named) dataframe[column_name] else dataframe[[column_name]], ...)
@@ -99,6 +104,8 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
             # scope would end up as a list with an $age and $height value.
             inputs[[column_name]] <<- inputs
           }
+
+          environment(`*tmp.fn.left.by.mungebits.library*`) <- prev_environment
           column
         })
       }
