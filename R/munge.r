@@ -74,7 +74,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
   stages <- lapply(mungepieces, function(piece) {
     force(piece);
     if (is(piece, 'stageRunner') || is.function(piece)) { piece }
-    else { function(env) piece$run(env) }
+    else { function(env) { piece$run(env) } }
   })
 
   stages <- append(stages, list(function(env) {

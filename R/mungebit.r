@@ -73,9 +73,9 @@ mungebit__run <- function(mungeplane, ...) {
 #' @seealso \code{\link{mungebit__run}}, \code{\link{mungebit__initialize}}
 mungebit__predict <- function(mungeplane, ...) {
   if (!is.null(predict_function)) {
+    original_env <- environment(train_function)
     inject_inputs(predict_function)
-    on.exit(environment(predict_function) <<-
-      parent.env(environment(predict_function)))
+    on.exit(environment(predict_function) <<- original_env)
 
     predict_function(mungeplane$data, ...) 
   }
@@ -88,9 +88,9 @@ mungebit__predict <- function(mungeplane, ...) {
 #' @seealso \code{\link{mungebit__run}}, \code{\link{mungebit__initialize}}
 mungebit__train <- function(mungeplane, ...) {
   if (!is.null(train_function)) {
+    original_env <- environment(train_function)
     inject_inputs(train_function)
-    on.exit(environment(train_function) <<-
-      parent.env(environment(train_function)))
+    on.exit(environment(train_function) <<- original_env)
 
     train_function(mungeplane$data, ...) 
 
