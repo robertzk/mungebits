@@ -73,7 +73,7 @@ mungebit__run <- function(mungeplane, ...) {
 #' @seealso \code{\link{mungebit__run}}, \code{\link{mungebit__initialize}}
 mungebit__predict <- function(mungeplane, ...) {
   if (!is.null(predict_function)) {
-    original_env <- environment(train_function)
+    original_env <- environment(predict_function)
     inject_inputs(predict_function)
     on.exit(environment(predict_function) <<- original_env)
 
