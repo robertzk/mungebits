@@ -1,4 +1,4 @@
-setClassUnion('listOrNull', c('list', 'NULL'))
+#setClassUnion('listOrNull', c('list', 'NULL'))
 #' Mungepieces are mungebits that have had their arguments cached
 #' (with the exception of the first, the data.frame).
 #'
@@ -31,7 +31,7 @@ setClassUnion('listOrNull', c('list', 'NULL'))
 mungepiece <- setRefClass('mungepiece',
   fields = list(bit = 'mungebit',
                 train_args = 'list',
-                predict_args = 'listOrNull'),
+                predict_args = 'ANY'), #'listOrNull'),
   methods = list(
     initialize = function(.bit, .train_args = list(), .predict_args = .train_args) {
       if (!is.list(.train_args)) .train_args <- list(.train_args)
