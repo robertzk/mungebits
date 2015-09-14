@@ -13,7 +13,7 @@
 #' @param predict_fn function. This specifies the behavior to perform
 #'    on the dataset when preparing for model prediction. A value of NULL
 #'    specifies that there should be no prediction step.
-#' @param enforce_train logical. Whether or not to flitch the trained flag
+#' @param enforce_train logical. Whether or not to flip the trained flag
 #'    during runtime.
 #' @seealso \code{\link{mungepiece}}
 #' @examples
