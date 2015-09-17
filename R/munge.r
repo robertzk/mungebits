@@ -91,6 +91,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
       piece$run(env)
     } }
   })
+  names(stages) <- names(mungepieces)
 
   stages <- append(stages, list(function(env) {
     # For now, store the mungepieces on the dataframe
