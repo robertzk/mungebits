@@ -41,7 +41,8 @@ parse_mungepiece <- function(args, train_only = FALSE) {
   if (is(args, 'stageRunner')) return(args)
   if (is.mungebit(args) || is.function(args)) args <- list(args)
   if (is.mungebit(args[[1]])) {
-    mb <- args[[1]]
+    # We construct a *new* mungebit from the old one to avoid shareable state.
+    mb <- mungebit(args[[1]]$train_function, args[[1]]$predict_function)
     mb$enforce_train <- !train_only
     return(mungepiece(mb, args[-1]))
   }
