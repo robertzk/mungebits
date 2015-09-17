@@ -1,3 +1,8 @@
+# Version 0.3.6
+
+* A critical fix for the `munge` function that initializes each mungepiece
+  at munge-time to ensure no pollution of train/predict when `enforce_train = FALSE`.
+
 # Version 0.3.0
 
   * The mungebitsTransformations package was renamed to syberiaMungebits,

@@ -71,10 +71,25 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
                         train_only = !identical(train_only, FALSE))
 
   # order matters, do not parallelize!
-  stages <- lapply(mungepieces, function(piece) {
-    force(piece);
-    if (is(piece, 'stageRunner') || is.function(piece)) { piece }
-    else { function(env) { piece$run(env) } }
+  stages <- lapply(seq_along(mungepieces), function(ix) {
+    reference_piece <- mungepieces[[ix]]
+    if (is(reference_piece, 'stageRunner') || is.function(reference_piece)) { reference_piece }
+    else { function(env) {
+      bit <- mungebits:::mungebit$new(
+        reference_piece$bit$train_function, reference_piece$bit$predict_function,
+        enforce_train = reference_piece$bit$enforce_train
+      )
+
+      piece <- mungebits:::mungepiece$new(
+        reference_piece$bit, reference_piece$train_args, reference_piece$predict_args
+      )
+
+      # Record the new mungepiece for later appending to the data set.
+      # TODO: (RK) Or maybe just record it *now*?
+      mungepieces[[ix]] <<- piece
+
+      piece$run(env)
+    } }
   })
 
   stages <- append(stages, list(function(env) {
