@@ -2,7 +2,7 @@ Package: mungebits
 Type: Package
 Title: mungebits (http://github.com/robertzk/mungebits)
 Description: Mungebits is a collection of data preparation functions
-Version: 0.3.8
+Version: 0.3.9
 Author: Robert Krzyzanowski <technoguyrob@gmail.com>
 Maintainer: Robert Krzyzanowski <technoguyrob@gmail.com>
 Authors@R: c(person("Robert", "Krzyzanowski",

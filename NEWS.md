@@ -1,3 +1,7 @@
+# Version 0.3.9
+
+* Fix `munge` function when run with pre-trained mungepieces.
+
 # Version 0.3.8
 
 * Another fix to the `munge` function.

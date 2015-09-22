@@ -68,6 +68,18 @@ test_that("it procures the correct stagerunner", {
   sr$run()
   expect_equal(sr$context$data[[1]], 4 * iris[[1]])
   sr$run()
+  expect_equal(sr$context$data[[1]], 16 * iris[[1]])
+})
+
+test_that("it procures the correct stagerunner with remember", {
+  args <- lapply(seq_len(2),
+    function(.) list(list(column_transformation(function(x) 2*x), NULL), 1))
+  sr <- munge(iris, args, stagerunner = list(remember = TRUE))
+  expect_is(sr, 'stageRunner')
+  expect_equal(length(sr$stages), 3)
+  sr$run()
+  expect_equal(sr$context$data[[1]], 4 * iris[[1]])
+  sr$run()
   expect_equal(sr$context$data[[1]], 4 * iris[[1]])
 })
 
