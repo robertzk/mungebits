@@ -81,7 +81,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
       )
 
       piece <- mungebits:::mungepiece$new(
-        reference_piece$bit, reference_piece$train_args, reference_piece$predict_args
+        bit, reference_piece$train_args, reference_piece$predict_args
       )
 
       # Record the new mungepiece for later appending to the data set.

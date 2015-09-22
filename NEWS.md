@@ -1,4 +1,8 @@
-# Version 0.3.6
+# Version 0.3.8
+
+* Another fix to the `munge` function.
+
+# Version 0.3.6-7
 
 * A critical fix for the `munge` function that initializes each mungepiece
   at munge-time to ensure no pollution of train/predict when `enforce_train = FALSE`.

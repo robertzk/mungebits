@@ -6,8 +6,8 @@
 #' @param list1 list
 #' @param list2 list
 #' @return the merged list.
-#' @examples
 #' @export
+#' @examples
 #' stopifnot(identical(list_merge(list(a = 1, b = 2), list(b = 3, c = 4)),
 #'                     list(a = 1, b = 3, c = 4)))
 #' stopifnot(identical(list_merge(NULL, list(a = 1)), list(a = 1)))
