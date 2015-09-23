@@ -80,6 +80,7 @@ munge <- function(dataframe, ..., stagerunner = FALSE, train_only = FALSE) {
         enforce_train = reference_piece$bit$enforce_train
       )
       bit$trained <- reference_piece$bit$trained
+      bit$inputs  <- reference_piece$bit$inputs
 
       piece <- mungebits:::mungepiece$new(
         bit, reference_piece$train_args, reference_piece$predict_args
