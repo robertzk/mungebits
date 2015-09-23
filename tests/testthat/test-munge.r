@@ -94,3 +94,40 @@ test_that("it procures a stagerunner with training only if train_only = TRUE", {
     info = "The stagerunner should only run the training step")
 })
 
+local({
+  drop_single_value_variables_fn <- function(x) {
+    if ('dropped' %in% names(inputs)) {
+      if (inputs$dropped) return(NULL)
+      else return(x)
+    }
+
+    if (length(x) == 0 || (tmp <- length(unique(x))) == 1 ||
+        (tmp == 2 && any(is.na(x)))) {
+      inputs$dropped <<- TRUE
+      NULL
+    } else {
+      inputs$dropped <<- FALSE
+      x 
+    }
+  }
+
+  drop_single_value_variables <- column_transformation(drop_single_value_variables_fn, mutating = TRUE)
+  without_attributes <- function(x) {
+    attr(x, "mungepieces") <- NULL
+    x
+  }
+
+  test_that("it handles state pollution in munge function even with inputs", {
+    args <- lapply(seq_len(2), function(.) list(drop_single_value_variables))
+    iris2 <- iris; iris2$foo <- 1
+    sr <- munge(iris2, args, stagerunner = TRUE)
+    sr$run() # Train it
+    trained_data <- sr$context$data
+    iris2 <- iris; iris2$foo <- 1:150
+    iris2 <- munge(iris2, trained_data)
+    expect_identical(without_attributes(iris2), without_attributes(iris),
+      info = "The inputs should not be dropped during munging / training")
+  })
+})
+
+
