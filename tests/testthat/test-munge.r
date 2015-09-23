@@ -123,7 +123,7 @@ local({
     sr <- munge(iris2, args, stagerunner = TRUE)
     sr$run() # Train it
     trained_data <- sr$context$data
-    iris2 <- iris; iris2$foo <- 1:150
+    iris2 <- iris; iris2$foo <- 1:150 # Use a non-single value var col
     iris2 <- munge(iris2, trained_data)
     expect_identical(without_attributes(iris2), without_attributes(iris),
       info = "The inputs should not be dropped during munging / training")
