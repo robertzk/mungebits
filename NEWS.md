@@ -1,3 +1,8 @@
+# Version 0.3.12
+
+* We inject a helper called `trained` (logical of length 1) to the
+  train and predict method of an arbitrary mungebit.
+
 # Version 0.3.9-11
 
 * Fix `munge` function when run with pre-trained mungepieces.

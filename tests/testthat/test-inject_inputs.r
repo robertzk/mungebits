@@ -4,6 +4,7 @@ context('inject_inputs')
 # test, so we mock `<<-` to behave like `<-`.
 local({
   `<<-` <- `<-`
+  trained <- TRUE
 
   test_that('it correctly injects a sample environment', {
     inputs <- list()

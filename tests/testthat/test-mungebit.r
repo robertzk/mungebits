@@ -60,3 +60,13 @@ test_that("it does not set trained = TRUE if enforce_train = FALSE", {
   mb$run(mungeplane(iris))
   expect_false(mb$trained)
 })
+
+test_that("we can use the trained input in a vanilla mungebit", {
+  env <- new.env()
+  mb <- mungebit(function(d) { env$trained <- trained })
+  mb$run(mungeplane(iris))
+  expect_false(env$trained)
+  mb$run(mungeplane(iris))
+  expect_true(env$trained)
+})
+

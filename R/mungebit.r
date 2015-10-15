@@ -134,7 +134,8 @@ is.mungebit <- function(x) inherits(x, 'mungebit')
 inject_inputs <- function(fn) {
   eval.parent(substitute({
     run_env <- new.env(parent = environment(fn))
-    run_env$inputs <- inputs
+    run_env$inputs  <- inputs
+    run_env$trained <- isTRUE(trained)
     debug_flag <- isdebugged(fn)
     environment(fn) <<- run_env
     # Restore debugging if it was enabled.
