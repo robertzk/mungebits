@@ -1,3 +1,7 @@
+# Version 0.3.12.1
+
+* Run roxygen documentation.
+
 # Version 0.3.12
 
 * We inject a helper called `trained` (logical of length 1) to the
