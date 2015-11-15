@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>munge. mungebits 0.3.5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mungebits 0.3.5</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>General-purpose data munging</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>munge(dataframe, ..., stagerunner&nbsp;=&nbsp;FALSE, train_only&nbsp;=&nbsp;FALSE)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>dataframe</dt>
+      <dd>a data set to operate on.</dd>
+      <dt>...</dt>
+      <dd>usually a list specifying the necessary operations (see
+examples).</dd>
+      <dt>stagerunner</dt>
+      <dd>logical or list. Whether to run the munge procedure or
+return the parametrizing stageRunner object (see package stagerunner).
+If a list, one can specify <code>remember = TRUE</code> to pass to the
+stageRunner initializer.</dd>
+      <dt>train_only</dt>
+      <dd>logical. Whether or not to leave the <code>trained</code>
+parameter on each mungebit to <code>TRUE</code> or <code>FALSE</code> accordingly.
+For example, if <code>stagerunner = TRUE</code> and we are planning to re-use
+the stagerunner for prediction, it makes sense to leave the mungebits
+untrained. (Note that this will prevent one from being able to run the
+predict functions!)</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+data.frame that has had the specified operations applied to it,
+   along with an additional property <code>mungepieces</code> that records
+   the history of applied functions. These can be used to reproduce
+   the transformations on e.g., a dataset that needs to have a
+   prediction run.
+</dl></p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>One can use <code>munge</code> to take a <code>data.frame</code>, apply a given set
+of transformations, and persistently store the operations on
+the <code>data.frame</code>, ready to run on a future <code>data.frame</code>.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## Not run: 
+# iris2 &lt;- munge(iris,
+#   list(column_transformation(function(x) 2 * x), &#39;Sepal.Length&#39;))
+# stopifnot(iris2[[&#39;Sepal.Length&#39;]] == iris[[&#39;Sepal.Length&#39;]] * 2)
+# 
+# iris2 &lt;- munge(iris,
+#    # train function &amp; predict function
+#    list(c(column_transformation(function(x) 2 * x),
+#         column_transformation(function(x) 3 * x)),
+#    # arguments to pass to transformation, i.e. column names in this case
+#    &#39;Sepal.Length&#39;))
+# stopifnot(iris2[[&#39;Sepal.Length&#39;]] == iris[[&#39;Sepal.Length&#39;]] * 2)
+# iris3 &lt;- munge(iris, attr(iris2, &#39;mungepieces&#39;))
+# # used transformations (&quot;mungepieces&quot;) stored on iris2 and apply to iris3.
+# # They will remember that they&#39;ve been trained already and run the
+# # prediction routine instead of the training routine. Note the above is
+# # also equivalent to the shortcut: munge(iris, iris2)
+# stopifnot(iris3[[&#39;Sepal.Length&#39;]] == iris[[&#39;Sepal.Length&#39;]] * 3)
+# ## End(Not run)
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>munge</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

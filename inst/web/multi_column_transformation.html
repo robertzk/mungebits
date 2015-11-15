@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>multi_column_transformation. mungebits 0.3.5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mungebits 0.3.5</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Old-to-new column mapping transformation</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>multi_column_transformation(transformation)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>transformation</dt>
+      <dd>a function. The arguments will be the ordered columns
+selected from the dataframe when the transformation is performed (see
+examples). One has to be careful to return an atomic vector if the
+result is 1-dimensional, and a list otherwise.</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+a function which takes a data.frame, input columns, and output
+   columns, the latter two of which specify the domain and range of the
+   transformation (see examples).
+</dl></p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>A mungebit which does not affect any existing columns, but can transform
+other columns into new columns, or affect multiple columns simultaneously
+as functions of each other.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>perimeter &lt;- multi_column_transformation(function(x, y) 2*x + 2*y)
+perimeter(iris, c(&#39;Sepal.Length&#39;, &#39;Sepal.Width&#39;), &#39;Sepal.Perimeter&#39;)
+
+multiplier &lt;- multi_column_transformation(function(x, y) x*y)
+multiplier(iris, c(&#39;Sepal.Length&#39;, &#39;Sepal.Width&#39;), &#39;Sepal.Area&#39;)
+
+property_generator &lt;- multi_column_transformation(
+   function(x, y) list(2*x + 2*y, x*y))
+property_generator(iris, c(&#39;Sepal.Length&#39;, &#39;Sepal.Width&#39;),
+   c(&#39;Sepal.Perimeter&#39;, &#39;Sepal.Area&#39;))
+
+swapper &lt;- multi_column_transformation(function(x, y) list(y, x))
+swapper(iris, c(&#39;Sepal.Length&#39;, &#39;Sepal.Width&#39;),
+  c(&#39;Sepal.Width&#39;, &#39;Sepal.Length&#39;))
+
+column_remover &lt;- multi_column_transformation(function(...) NULL)
+column_remover(iris, c(&#39;Sepal.Length&#39;, &#39;Sepal.Width&#39;))
+
+scaling_fun &lt;- function(...) {
+  args &lt;- list(...)
+  const &lt;- args[[length(args)]]
+  args &lt;- head(args, -1)
+  if (length(args) == 1) args[[1]] * const
+  else lapply(args, function(col) col * const)
+}
+scaler &lt;- multi_column_transformation(scaling_fun)
+# scale Sepal.Length and Sepal.Width by two
+scaler(iris, c(&#39;Sepal.Length&#39;, &#39;Sepal.Width&#39;), , 2)
+scaler(iris[c(&#39;Petal.Length&#39;, &#39;Petal.Width&#39;)], , , 2)
+# Note the missing second and third arguments.
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>multi_column_transformation</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<code><a href='column_transformation.html'>column_transformation</a></code>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

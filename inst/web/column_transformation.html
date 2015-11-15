@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>column_transformation. mungebits 0.3.5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mungebits 0.3.5</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Pure column transformations.</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>column_transformation(transformation, mutating&nbsp;=&nbsp;FALSE, named&nbsp;=&nbsp;FALSE)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>transformation</dt>
+      <dd>a function. The only argument should be the original
+column.</dd>
+      <dt>mutating</dt>
+      <dd>a logical. Announces whether the transformation passed in
+attempts to maintain state between prediction and training runs using
+the "inputs" global.</dd>
+      <dt>named</dt>
+      <dd>a logical. Whether or not the transformation should be passed
+an atomic vector, or a list of length 1 whose single element is given
+the same name as the column currently being processed.</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+a function which takes a data.frame and a vector of columns and
+   applies the transformation.
+</dl></p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>A mungebit which affects multiple columns identically and independently
+can be abstracted into a column transformation. This function allows one
+to specify what happens to an individual column, and the mungebit will be
+the resulting column transformation applied to an arbitrary combination of
+columns.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>doubler &lt;- column_transformation(function(x) 2*x)
+# doubles the Sepal.Length column in the iris dataset
+doubler(iris, c(&#39;Sepal.Length&#39;)) 
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>column_transformation</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<code><a href='multi_column_transformation.html'>multi_column_transformation</a></code>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

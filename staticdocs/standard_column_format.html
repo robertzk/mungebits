@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>standard_column_format. mungebits 0.3.5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mungebits 0.3.5</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Converts a logical / numeric / character vector or a function
+into a character vector of column names for a dataframe.</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>standard_column_format(cols, dataframe)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>cols</dt>
+      <dd>a vector or function. If logical / numeric / character vector,
+it will attempt to find those columns matching these values. If <code>cols</code>
+is a function, it will apply this function to each column of the dataframe
+and return the names of columns for which it was <code>TRUE</code>. Additionally,
+<code>cols</code> can be a list of any combination of the above, which will 
+require all the conditions to be met.</dd>
+      <dt>dataframe</dt>
+      <dd>a reference dataframe. Necessary for computing the
+column names if a numeric or logical vector is specified for <code>cols</code>.</dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>If a function is provided, it will be applied to each column of
+the dataframe and must return a logical; those with resulting value TRUE
+will be returned as a character vector.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>standard_column_format(c(1,5), iris)  # c(&#39;Sepal.Length&#39;, &#39;Species&#39;)
+</div>
+<div class='output'>[1] &quot;Sepal.Length&quot; &quot;Species&quot;     
+</div>
+<div class='input'>standard_column_format(c(TRUE,FALSE,FALSE,FALSE,TRUE), iris)  # c(&#39;Sepal.Length&#39;, &#39;Species&#39;)
+</div>
+<div class='output'>[1] &quot;Sepal.Length&quot; &quot;Species&quot;     
+</div>
+<div class='input'>standard_column_format(&#39;Sepal.Length&#39;, iris)  # &#39;Sepal.Length&#39;
+</div>
+<div class='output'>[1] &quot;Sepal.Length&quot;
+</div>
+<div class='input'>standard_column_format(list(is.numeric, c(1,5)), iris)  # &#39;Sepal.Length&#39;
+</div>
+<div class='output'>[1] &quot;Sepal.Length&quot;
+</div>
+<div class='input'># TODO: (RK) Explain except()
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>standard_column_format</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

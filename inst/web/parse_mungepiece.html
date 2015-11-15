@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>parse_mungepiece. mungebits 0.3.5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mungebits 0.3.5</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Translate a list of arguments passed to a mungebit into a mungepiece</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>parse_mungepiece(args, train_only&nbsp;=&nbsp;FALSE)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>args</dt>
+      <dd>a list. This can be of the formats
+<code>list(train_fn, ...)</code>, <code>list(list(train_fn, predict_fn), ...)</code>,
+and <code>list(list(train_fn, ...), list(predict_fn, ...))</code>. In the first
+example, the train and predict function are assumed to be identical. In
+the first two examples, the arguments to these functions are assumed to
+be identical (for example, if the same kind of filter needs to be applied
+to a data set that is about to be trained as to one about to be
+predicted). Finally, the last example is the most flexible and allows
+different parameters for the training and prediction function,
+respectively. The given training and prediction functions are used to
+construct a <code>mungebit</code>, and the resulting <code>mungebit</code> and 
+the remaining arguments are stored in a <code>mungepiece</code>.</dd>
+      <dt>train_only</dt>
+      <dd>logical. Whether or not to leave the <code>trained</code>
+parameter on each mungebit to <code>TRUE</code> or <code>FALSE</code> accordingly.
+For example, if <code>stagerunner = TRUE</code> and we are planning to re-use
+the stagerunner for prediction, it makes sense to leave the mungebits
+untrained. (Note that this will prevent one from being able to run the
+predict functions!)</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+the parsed mungepiece
+</dl></p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>For example, one can pass a training function, a prediction function,
+and additional arguments, and the constructed mungepiece will hold
+these arguments, ready to call the attached mungebit on a given dataframe.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## Not run: 
+# doubler &lt;- column_transformation(function(x) x * 2)
+# mp &lt;- parse_mungepiece(list(doubler, &#39;Sepal.Length&#39;)) 
+# iris2 &lt;- mungeplane(iris)
+# mp$run(iris2)
+# stopifnot(all.equal(iris2$data[[1]], 2 * iris[[1]]))
+# 
+# # TODO: Way more examples, unit tests
+# 
+# ## End(Not run)
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>parse_mungepiece</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

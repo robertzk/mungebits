@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mungebit__initialize. mungebits 0.3.5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mungebits 0.3.5</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Constructor for mungebit class.</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>mungebit__initialize(train_fn&nbsp;=&nbsp;function(x) x, predict_fn&nbsp;=&nbsp;train_fn, enforce_train&nbsp;=&nbsp;TRUE)</div>
+<div>mungebit__run(mungeplane, ...)</div>
+<div>mungebit__predict(mungeplane, ...)</div>
+<div>mungebit__train(mungeplane, ...)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>train_fn</dt>
+      <dd>function. This specifies the behavior to perform
+on the dataset when preparing for model training. A value of NULL
+specifies that there should be no training step.</dd>
+      <dt>predict_fn</dt>
+      <dd>function. This specifies the behavior to perform
+on the dataset when preparing for model prediction. A value of NULL
+specifies that there should be no prediction step.</dd>
+      <dt>enforce_train</dt>
+      <dd>logical. Whether or not to flitch the trained flag
+during runtime.</dd>
+      <dt>mungeplane</dt>
+      <dd>mungeplane. Essentially an environment containing
+a <code>data</code> variable.</dd>
+      <dt>...</dt>
+      <dd>additional arguments to the mungebit's <code>train_fn</code> or
+<code>predict_fn</code>.</dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Mungebits are atomic data transformations of a data.frame that,
+loosely speaking, aim to modify "one thing" about a variable or
+collection of variables. This is pretty loosely defined, but examples
+include dropping variables, mapping values, discretization, etc.</p>
+  
+      <p>Imagine flipping a switch on a set of train tracks. A mungebit
+behaves like this: once the <code>trained</code> switch is flipped,
+it can only run the <code>predict_fn</code>, otherwise it will
+run the <code>train_fn</code>.</p>
+  
+      <p>Run the predict function on a mungebit.</p>
+  
+      <p>Run the train function on a mungebit.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## Not run: 
+# mp &lt;- mungeplane(iris)
+# mb &lt;- mungebit(column_transformation(function(col, scale = NULL) {
+#   if (&#39;scale&#39; %in% names(inputs))
+#     cat(&quot;Column scaled by &quot;, inputs$scale, &quot;\n&quot;)
+#   else inputs$scale &lt;&lt;- scale
+#   col * inputs$scale
+# }))
+# mb$run(mp, &#39;Sepal.Length&#39;, 2)
+# # mp$data now contains a copy of iris w/ the Sepal.Length column doubled
+# head(mp$data[[1]] / iris[[1]])
+# # &gt; [1] 2 2 2 2 2 2
+# mb$run(mp, &#39;Sepal.Length&#39;)
+# # &gt; Column scaled by 2
+# head(mp$data[[1]] / iris[[1]])
+# # &gt; [1] 4 4 4 4 4 4 
+# ## End(Not run)
+
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>mungebit__initialize</li><li>mungebit__predict</li><li>mungebit__run</li><li>mungebit__train</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<code><a href='mungepiece.html'>mungepiece</a></code>
+
+<code><a href='mungebit.html'>mungebit__initialize</a></code>
+
+<code><a href='mungebit.html'>mungebit__run</a></code>, <code><a href='mungebit.html'>mungebit__initialize</a></code>
+
+<code><a href='mungebit.html'>mungebit__run</a></code>, <code><a href='mungebit.html'>mungebit__initialize</a></code>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
