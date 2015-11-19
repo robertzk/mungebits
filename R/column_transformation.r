@@ -81,15 +81,14 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
         # scope (like in a mungebit). Afterwards, we exploit the fact that the
         # <<- operator never modifies local scope using
         #   inputs[[column_name]] <<- inputs
-	input_vec <- as.list(rep(NULL, length(inputs)))
+        input_vec <- NULL
+        input_vec[cols] <- list(NULL)
         has_in <- cols %in% names(inputs)
-	input_vec[has_in] <- inputs[cols]
+	input_vec[has_in] <- inputs[cols[has_in]]
+        
         dataframe[cols] <- lapply(1:length(cols), function(i, mycols, myinput_vec) {
           # If this is a prediction run and inputs already exists for this
           # column, use that, otherwise use NULL
-          # inputs <- if (exists('inputs') &&
-          #               column_name %in% names(inputs)) inputs[[column_name]]
-          #           else NULL
           column_name <- mycols[i]				  
           inputs <- myinput_vec[[i]]
           trained <- exists('trained') # TODO: (RK) Be more careful with this
