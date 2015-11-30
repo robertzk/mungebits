@@ -51,10 +51,14 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
           inputs$`*colnames*`
         else standard_cols
 
-      if(length(cols) == 0) return(NULL)
+      if (length(cols) == 0) return(NULL)
 
-      if(exists('trained'))is_training <- !isTRUE(trained)
-      else is_training <- TRUE
+      if (exists("trained")) {
+        is_training <- !isTRUE(trained)
+      } else {
+        is_training <- TRUE
+      }
+
       # Trick to make assignment incredibly fast. Could screw up the
       # data.frame if the function is interrupted, however.
       class(dataframe) <- 'list'
