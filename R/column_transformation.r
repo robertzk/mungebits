@@ -51,10 +51,14 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
           inputs$`*colnames*`
         else standard_cols
 
-      if(length(cols) == 0) return(NULL)
+      if (length(cols) == 0) return(NULL)
 
-      if(exists('trained'))is_training <- !isTRUE(trained)
-      else is_training <- TRUE
+      if (exists("trained")) {
+        is_training <- !isTRUE(trained)
+      } else {
+        is_training <- TRUE
+      }
+
       # Trick to make assignment incredibly fast. Could screw up the
       # data.frame if the function is interrupted, however.
       class(dataframe) <- 'list'
@@ -74,6 +78,10 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
 
         environment(`*tmp.fn.left.by.mungebits.library*`) <- prev_environment
       } else {
+        input_vec <- stats::setNames(vector("list", length(cols)), cols)
+        has_in <- cols %in% names(inputs)
+	      input_vec[has_in] <- inputs[cols[has_in]]
+        
         # We must now be surgically precise. The transformation function
         # is attempting to store values in "inputs" using inputs <<- ...
         # However, we would like to allow different values for different
@@ -84,17 +92,12 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
         # scope (like in a mungebit). Afterwards, we exploit the fact that the
         # <<- operator never modifies local scope using
         #   inputs[[column_name]] <<- inputs
-        input_vec <- NULL
-        input_vec[cols] <- list(NULL)
-        has_in <- cols %in% names(inputs)
-	input_vec[has_in] <- inputs[cols[has_in]]
-        
-        dataframe[cols] <- lapply(1:length(cols), function(i, mycols, myinput_vec) {
+        dataframe[cols] <- lapply(seq_along(cols), function(i) {
           # If this is a prediction run and inputs already exists for this
           # column, use that, otherwise use NULL
-          column_name <- mycols[i]				  
-          inputs <- myinput_vec[[i]]
-          trained <- exists('trained') # TODO: (RK) Be more careful with this
+          column_name <- cols[i]
+          inputs      <- input_vec[[i]]
+          trained     <- exists("trained") # TODO: (RK) Be more careful with this
           debug_flag <- isdebugged(`*tmp.fn.left.by.mungebits.library*`)
           # Ensure transformation has access to "inputs"
           prev_environment <- environment(`*tmp.fn.left.by.mungebits.library*`)
@@ -103,7 +106,7 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
           if (debug_flag) debug(`*tmp.fn.left.by.mungebits.library*`)
           column <- `*tmp.fn.left.by.mungebits.library*`(
             if (named) dataframe[column_name] else dataframe[[column_name]], ...)
-          if (isTRUE(is_training) & !is.null(inputs)) {
+          if (isTRUE(is_training) && !is.null(inputs)) {
             # The <<- operator never modifies local scope so that left "inputs"
             # refers to the parent.frame() whereas the right "inputs" refers
             # to the one in local scope. The end result is that if the column
@@ -114,7 +117,7 @@ column_transformation <- function(transformation, mutating = FALSE, named = FALS
 
           environment(`*tmp.fn.left.by.mungebits.library*`) <- prev_environment
           column
-        }, cols, input_vec)
+        })
       }
       # Slightly slower is:
       # for(i in cols) dataframe[[i]] <-
